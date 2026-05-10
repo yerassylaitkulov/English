@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Practice Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#faf6f0;--ink:#1a1410;--rust:#c5502a;--gold:#d4a843;--sage:#6b8f71;--mist:#e8e2d9;--paper:#f2ece3;--blue:#4a7fa5;--shadow:rgba(26,20,16,0.12);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* LANDING */
+#landing{align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden;}
+#landing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,#2e1f14 0%,#1a1410 100%);}
+.landing-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,67,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,.06) 1px,transparent 1px);background-size:60px 60px;}
+.landing-content{position:relative;text-align:center;padding:40px;max-width:760px;}
+.landing-label{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;animation:fadeUp .8s .2s forwards;}
+.landing-title{font-family:'Playfair Display',serif;font-size:clamp(42px,8vw,80px);color:var(--cream);line-height:1.05;margin-bottom:20px;opacity:0;animation:fadeUp .8s .4s forwards;}
+.landing-title em{font-style:italic;color:var(--gold);}
+.landing-sub{font-size:16px;color:rgba(250,246,240,.55);margin-bottom:48px;line-height:1.7;opacity:0;animation:fadeUp .8s .6s forwards;}
+.mode-cards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .8s forwards;}
+.mode-card{background:rgba(250,246,240,.06);border:1px solid rgba(212,168,67,.25);border-radius:16px;padding:28px 32px;cursor:pointer;transition:all .3s;text-align:left;min-width:200px;}
+.mode-card:hover{background:rgba(212,168,67,.12);border-color:var(--gold);transform:translateY(-4px);}
+.mode-icon{font-size:32px;margin-bottom:12px;}
+.mode-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);margin-bottom:6px;}
+.mode-desc{font-size:13px;color:rgba(250,246,240,.5);line-height:1.5;}
+
+/* TOPIC SELECT */
+#topic-select{background:var(--cream);}
+.topics-page{max-width:1100px;margin:0 auto;padding:36px 20px 60px;}
+.top-bar{display:flex;align-items:center;gap:16px;margin-bottom:32px;flex-wrap:wrap;}
+.back-btn{background:none;border:1.5px solid var(--mist);border-radius:8px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;color:var(--ink);transition:all .2s;}
+.back-btn:hover{border-color:var(--rust);color:var(--rust);}
+.screen-title{font-family:'Playfair Display',serif;font-size:28px;}
+.category-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--rust);margin:28px 0 12px;}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px;}
+.topic-card{background:var(--paper);border:1.5px solid var(--mist);border-radius:16px;padding:20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.topic-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--rust);transform:scaleX(0);transition:transform .25s;transform-origin:left;}
+.topic-card:hover{border-color:var(--rust);transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow);}
+.topic-card:hover::after{transform:scaleX(1);}
+.topic-icon{font-size:24px;margin-bottom:9px;}
+.topic-name{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:5px;line-height:1.3;}
+.topic-count{font-size:12px;color:#888;}
+.topic-tag{position:absolute;top:12px;right:12px;font-size:9px;padding:3px 7px;border-radius:20px;letter-spacing:1px;font-weight:600;text-transform:uppercase;}
+.tag-vocab{background:#e8f5ea;color:#2d7a3a;}
+.tag-grammar{background:#e8f0fa;color:#3a5a9a;}
+.tag-pron{background:#fef3e2;color:#a06010;}
+.tag-phrasal{background:#fdecea;color:#c0392b;}
+
+/* EXERCISE SCREEN */
+#exercise-screen{background:var(--cream);align-items:center;}
+.exam-banner{background:var(--rust);color:white;text-align:center;padding:8px;font-size:12px;letter-spacing:2px;text-transform:uppercase;}
+.exercise-header{width:100%;background:var(--ink);padding:14px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+.ex-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.progress-bar-wrap{flex:2;height:4px;background:rgba(255,255,255,.15);border-radius:4px;}
+.progress-bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .4s;}
+.score-badge{font-size:13px;color:var(--gold);font-weight:500;white-space:nowrap;}
+.timer-display{font-family:'Playfair Display',serif;font-size:19px;color:var(--gold);min-width:58px;text-align:right;}
+.timer-display.urgent{color:var(--rust);animation:pulse 1s infinite;}
+.exercise-body{width:100%;max-width:860px;padding:32px 18px 80px;}
+.exercise-block{display:none;animation:fadeUp .4s forwards;}
+.exercise-block.active{display:block;}
+.ex-number{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--rust);margin-bottom:8px;}
+.ex-heading{font-family:'Playfair Display',serif;font-size:23px;margin-bottom:8px;line-height:1.3;}
+.ex-instruction{font-size:14px;color:#666;margin-bottom:26px;font-style:italic;line-height:1.6;padding:11px 15px;background:var(--paper);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;}
+
+/* Q CARD */
+.q-card{background:white;border:1.5px solid var(--mist);border-radius:14px;padding:17px 20px;margin-bottom:13px;transition:border-color .2s;}
+.q-text{font-size:15px;line-height:1.75;margin-bottom:13px;}
+.q-text strong{color:var(--rust);font-style:italic;}
+
+/* OPTIONS */
+.options{display:flex;flex-wrap:wrap;gap:8px;}
+.opt-btn{background:var(--paper);border:1.5px solid var(--mist);border-radius:10px;padding:9px 15px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;color:var(--ink);}
+.opt-btn:hover:not(:disabled){border-color:var(--ink);background:white;}
+.opt-btn.correct-ans{border-color:var(--sage)!important;background:var(--sage)!important;color:white!important;}
+.opt-btn.wrong-ans{border-color:var(--rust)!important;background:var(--rust)!important;color:white!important;}
+.opt-btn:disabled{cursor:default;}
+
+/* INPUTS */
+.gap-input{display:inline-block;border:none;border-bottom:2px solid var(--ink);background:transparent;font-family:'DM Sans',sans-serif;font-size:15px;min-width:130px;padding:2px 6px;color:var(--ink);outline:none;transition:border-color .2s;}
+.gap-input:focus{border-color:var(--rust);}
+.gap-input.correct{border-color:var(--sage);color:var(--sage);}
+.gap-input.wrong{border-color:var(--rust);color:var(--rust);}
+
+/* MATCH */
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.match-col{display:flex;flex-direction:column;gap:7px;}
+.match-item{background:var(--paper);border:1.5px solid var(--mist);border-radius:10px;padding:10px 13px;font-size:13px;cursor:pointer;transition:all .2s;min-height:42px;display:flex;align-items:center;line-height:1.4;}
+.match-item.selected{border-color:var(--ink);background:var(--ink);color:white;}
+.match-item.matched{border-color:var(--sage);background:#f0f7f1;cursor:default;}
+.match-item.wrong-match{border-color:var(--rust);background:#fdf2f0;}
+
+/* WORD BANK */
+.word-bank{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;padding:13px;background:var(--paper);border-radius:12px;border:1px dashed var(--mist);}
+.word-chip{background:white;border:1.5px solid var(--mist);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;transition:all .2s;}
+.word-chip:hover{border-color:var(--rust);}
+.word-chip.used{opacity:.3;pointer-events:none;text-decoration:line-through;}
+.word-chip.sel{border-color:var(--rust);background:var(--rust);color:white;}
+
+/* GAP SPAN */
+.gap-span{display:inline-block;min-width:110px;border-bottom:2px dashed var(--rust);cursor:pointer;padding:1px 8px;color:var(--rust);font-style:italic;}
+.gap-span.fc{border-bottom-color:var(--sage);color:var(--sage);font-style:normal;}
+.gap-span.fw{border-bottom-color:var(--rust);color:var(--rust);font-style:normal;}
+.gap-span.lk{cursor:default;}
+
+/* FEEDBACK */
+.feedback-msg{display:none;margin-top:7px;font-size:13px;padding:7px 12px;border-radius:8px;}
+.feedback-msg.show{display:block;}
+.feedback-msg.correct{background:#e8f5ea;color:#2d7a3a;}
+.feedback-msg.wrong{background:#fdecea;color:#c0392b;}
+
+/* PRON */
+.pron-btn{background:var(--paper);border:1.5px solid var(--mist);border-radius:10px;padding:9px 18px;font-family:'Playfair Display',serif;font-size:18px;cursor:pointer;transition:all .2s;letter-spacing:1px;margin:4px;}
+.pron-btn:hover:not(:disabled){border-color:var(--blue);}
+.pron-btn.correct-ans{border-color:var(--sage)!important;background:var(--sage)!important;color:white!important;}
+.pron-btn.wrong-ans{border-color:var(--rust)!important;background:var(--rust)!important;color:white!important;}
+
+/* NAV */
+.ex-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;padding-top:18px;border-top:1px solid var(--mist);gap:10px;flex-wrap:wrap;}
+.nav-btn{background:var(--ink);color:var(--cream);border:none;border-radius:10px;padding:11px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;}
+.nav-btn:hover{background:var(--rust);}
+.nav-btn.secondary{background:none;color:var(--ink);border:1.5px solid var(--mist);}
+.nav-btn.secondary:hover{border-color:var(--ink);background:none;}
+.nav-btn:disabled{opacity:.3;pointer-events:none;}
+.check-btn{background:var(--rust);color:white;border:none;border-radius:10px;padding:11px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;}
+.check-btn:hover{background:#a8401f;}
+
+/* ─── INTRO / RULE PAGE ─── */
+.intro-page{background:white;border:1.5px solid var(--mist);border-radius:18px;padding:32px;margin-bottom:20px;}
+.intro-page h2{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px;}
+.intro-page .intro-sub{font-size:14px;color:#888;margin-bottom:24px;}
+.rule-box{background:var(--paper);border-radius:12px;padding:20px 24px;margin-bottom:14px;border-left:4px solid var(--gold);}
+.rule-box h3{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:8px;color:var(--ink);}
+.rule-box p{font-size:14px;line-height:1.7;color:#444;}
+.rule-box .eg{font-style:italic;color:var(--rust);margin-top:6px;font-size:14px;}
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.rule-col{background:var(--paper);border-radius:12px;padding:18px;}
+.rule-col h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:10px;}
+.rule-col ul{list-style:none;padding:0;}
+.rule-col ul li{font-size:13px;line-height:1.8;padding:3px 0;border-bottom:1px solid var(--mist);}
+.rule-col ul li:last-child{border:none;}
+.rule-col ul li span{font-weight:600;color:var(--rust);}
+.eg-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px;}
+.eg-table th{background:var(--ink);color:var(--cream);padding:8px 12px;text-align:left;font-weight:500;}
+.eg-table td{padding:8px 12px;border-bottom:1px solid var(--mist);}
+.eg-table tr:nth-child(even) td{background:#faf6f0;}
+.eg-table .ed{color:var(--blue);font-weight:600;}
+.eg-table .ing{color:var(--rust);font-weight:600;}
+.warning-box{background:#fef9ec;border:1.5px solid var(--gold);border-radius:12px;padding:16px 20px;margin-top:14px;font-size:14px;line-height:1.7;}
+.warning-box strong{color:var(--rust);}
+
+/* ─── FLASHCARD ─── */
+.flashcard-section{margin-bottom:20px;}
+.fc-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.fc-counter{font-size:13px;color:#888;}
+.fc-wrap{perspective:1000px;width:100%;max-width:560px;margin:0 auto 20px;cursor:pointer;}
+.fc-inner{width:100%;height:220px;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.fc-inner.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;}
+.fc-front{background:var(--ink);border:2px solid rgba(212,168,67,.3);}
+.fc-back{background:white;border:2px solid var(--mist);transform:rotateY(180deg);}
+.fc-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(250,246,240,.4);margin-bottom:12px;}
+.fc-back .fc-label{color:#aaa;}
+.fc-word{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,36px);color:var(--cream);font-weight:700;}
+.fc-back .fc-word{font-size:22px;color:var(--ink);}
+.fc-translation{font-size:18px;color:var(--gold);margin-top:6px;font-style:italic;}
+.fc-example{font-size:13px;color:#666;margin-top:10px;line-height:1.6;font-style:italic;}
+.fc-hint{font-size:12px;color:rgba(250,246,240,.35);margin-top:16px;}
+.fc-nav{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.fc-btn{background:var(--paper);border:1.5px solid var(--mist);border-radius:10px;padding:9px 20px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;}
+.fc-btn:hover{border-color:var(--ink);}
+.fc-btn.primary{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.fc-btn.primary:hover{background:var(--rust);border-color:var(--rust);}
+.fc-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--mist);transition:background .2s;}
+.fc-dot.active{background:var(--rust);}
+.fc-dot.seen{background:var(--sage);}
+
+/* ─── GRAMMAR RULE PAGE ─── */
+.grammar-rule-page{}
+.tense-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px;}
+.tense-table th{background:var(--ink);color:var(--cream);padding:10px 14px;text-align:left;}
+.tense-table td{padding:9px 14px;border-bottom:1px solid var(--mist);line-height:1.6;}
+.tense-table tr:nth-child(even) td{background:#faf6f0;}
+.tense-table .form{font-family:'Playfair Display',serif;font-size:14px;color:var(--blue);font-style:italic;}
+.tense-table .err{color:var(--rust);text-decoration:line-through;}
+.tense-table .ok{color:var(--sage);font-weight:600;}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.compare-card{border-radius:12px;padding:16px;}
+.compare-card.wrong-card{background:#fdf2f0;border:1.5px solid #f5c6be;}
+.compare-card.right-card{background:#f0f7f1;border:1.5px solid #b8dfc0;}
+.compare-card h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.compare-card h4.w{color:var(--rust);}
+.compare-card h4.r{color:var(--sage);}
+.compare-card p{font-size:14px;line-height:1.7;}
+
+/* ─── PRON RULE PAGE ─── */
+.pron-rule-page{}
+.stress-demo{font-family:'Playfair Display',serif;font-size:32px;letter-spacing:4px;margin:12px 0;}
+.stress-demo .stressed{color:var(--rust);text-decoration:underline;font-weight:700;}
+.ipa-card{background:var(--paper);border-radius:12px;padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.ipa-word{font-family:'Playfair Display',serif;font-size:24px;min-width:140px;}
+.ipa-pron{font-size:18px;color:var(--blue);min-width:160px;}
+.ipa-note{font-size:13px;color:#666;line-height:1.5;}
+.ipa-stress{font-size:13px;color:var(--rust);font-weight:600;margin-top:2px;}
+
+/* PHRASAL REF */
+.phrasal-ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px;}
+.phrasal-ref-card{background:white;border:1.5px solid var(--mist);border-radius:12px;padding:16px;}
+.phrasal-ref-card .verb{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);margin-bottom:4px;}
+.phrasal-ref-card .def{font-size:13px;color:#555;line-height:1.5;margin-bottom:6px;}
+.phrasal-ref-card .eg{font-size:12px;color:var(--blue);font-style:italic;line-height:1.5;}
+
+/* RESULTS */
+#results-screen{background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
+.results-wrap{max-width:600px;}
+.results-emoji{font-size:64px;margin-bottom:24px;animation:bounceIn .6s;}
+.results-title{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,56px);color:var(--cream);margin-bottom:12px;}
+.results-score{font-size:80px;font-family:'Playfair Display',serif;color:var(--gold);line-height:1;margin:24px 0;}
+.results-sub{font-size:16px;color:rgba(250,246,240,.55);margin-bottom:40px;line-height:1.7;}
+.results-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.res-btn{padding:13px 26px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border:none;}
+.res-btn.primary{background:var(--gold);color:var(--ink);}
+.res-btn.primary:hover{background:#c49830;}
+.res-btn.outline{background:transparent;color:var(--cream);border:1.5px solid rgba(250,246,240,.3);}
+.res-btn.outline:hover{border-color:var(--cream);}
+.answer-area{width:100%;border:1.5px solid var(--mist);border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;min-height:80px;resize:vertical;outline:none;background:var(--paper);}
+.answer-area:focus{border-color:var(--rust);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.confetti-piece{position:fixed;width:8px;height:8px;top:-10px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;}
+@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(max-width:600px){.rule-grid,.compare-grid,.match-wrap{grid-template-columns:1fr;}}
+
+/* ─── PROGRESS SCREEN ─── */
+#progress-screen{background:var(--cream);align-items:flex-start;}
+.progress-page{max-width:900px;margin:0 auto;padding:36px 20px 80px;width:100%;}
+.progress-hero{background:var(--ink);border-radius:20px;padding:36px 40px;margin-bottom:32px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;}
+.progress-hero-text{flex:1;}
+.progress-hero-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.progress-hero-title{font-family:'Playfair Display',serif;font-size:36px;color:var(--cream);line-height:1.1;margin-bottom:8px;}
+.progress-hero-sub{font-size:14px;color:rgba(250,246,240,.5);line-height:1.7;}
+.progress-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.pstat{text-align:center;background:rgba(250,246,240,.07);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:16px 20px;}
+.pstat-num{font-family:'Playfair Display',serif;font-size:32px;color:var(--gold);line-height:1;}
+.pstat-label{font-size:11px;color:rgba(250,246,240,.4);margin-top:4px;letter-spacing:1px;}
+.prog-section{margin-bottom:36px;}
+.prog-section-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);margin-bottom:4px;}
+.prog-section-sub{font-size:13px;color:#888;margin-bottom:16px;}
+.prog-group{background:white;border:1.5px solid var(--mist);border-radius:16px;margin-bottom:14px;overflow:hidden;}
+.prog-group-header{padding:14px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;background:white;transition:background .2s;}
+.prog-group-header:hover{background:var(--paper);}
+.prog-group-icon{font-size:20px;flex-shrink:0;}
+.prog-group-name{font-family:'Playfair Display',serif;font-size:17px;flex:1;}
+.prog-group-count{font-size:12px;color:#888;margin-right:8px;}
+.prog-group-arrow{font-size:12px;color:#aaa;transition:transform .25s;}
+.prog-group-arrow.open{transform:rotate(90deg);}
+.prog-group-body{display:none;padding:0 20px 18px;border-top:1px solid var(--mist);}
+.prog-group-body.open{display:block;animation:fadeUp .25s;}
+.word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:14px;}
+.word-card{background:var(--paper);border-radius:10px;padding:12px 14px;border-left:3px solid var(--gold);}
+.word-card .wc-word{font-weight:600;font-size:14px;margin-bottom:2px;}
+.word-card .wc-trans{font-size:13px;color:#888;font-style:italic;margin-bottom:4px;}
+.word-card .wc-ex{font-size:12px;color:#666;line-height:1.5;}
+.rule-card{background:var(--paper);border-radius:10px;padding:14px 16px;margin-top:10px;border-left:3px solid var(--rust);}
+.rule-card .rc-title{font-weight:600;font-size:14px;margin-bottom:6px;color:var(--rust);}
+.rule-card .rc-body{font-size:13px;line-height:1.75;color:#444;}
+.rule-card .rc-eg{font-size:12px;color:var(--blue);font-style:italic;margin-top:6px;line-height:1.6;}
+.expr-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.expr-item{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--paper);border-radius:10px;}
+.expr-phrase{font-weight:600;font-size:14px;min-width:200px;color:var(--ink);}
+.expr-meaning{font-size:13px;color:#666;line-height:1.5;}
+.pron-item{display:flex;align-items:center;gap:16px;padding:11px 0;border-bottom:1px solid var(--mist);flex-wrap:wrap;}
+.pron-item:last-child{border:none;}
+.pron-word-big{font-family:'Playfair Display',serif;font-size:22px;min-width:140px;}
+.pron-ipa{font-size:15px;color:var(--blue);min-width:140px;font-family:monospace;}
+.pron-note-small{font-size:13px;color:#666;line-height:1.5;flex:1;}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="landing-grid"></div>
+  <div class="landing-content">
+    <div class="landing-label">English Practice Hub</div>
+    <h1 class="landing-title">Ready to<br><em>practise?</em></h1>
+    <p class="landing-sub">Choose your mode, pick a topic, and start with the lesson page before the exercises.<br>Vocabulary, grammar, phrasal verbs, and pronunciation — all in one place.</p>
+    <div class="mode-cards">
+      <div class="mode-card" onclick="startMode('practice')">
+        <div class="mode-icon">📖</div>
+        <div class="mode-title">Practice Exercises</div>
+        <div class="mode-desc">Pick a topic and work through the exercises with instant feedback.</div>
+      </div>
+
+      <div class="mode-card" onclick="showScreen('progress-screen')">
+        <div class="mode-icon">🌟</div>
+        <div class="mode-title">What I've Learned</div>
+        <div class="mode-desc">Browse all vocabulary, grammar rules, and expressions from your lessons.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS SCREEN -->
+<div id="progress-screen" class="screen">
+  <div class="progress-page">
+    <button class="back-btn" onclick="showScreen('landing')" style="margin-bottom:24px">← Back</button>
+
+    <!-- HERO -->
+    <div class="progress-hero">
+      <div class="progress-hero-text">
+        <div class="progress-hero-label">Your Learning Journey</div>
+        <div class="progress-hero-title">What you've<br><em style="font-style:italic;color:var(--gold)">learned so far</em></div>
+        <div class="progress-hero-sub">Everything from your lessons in one place.<br>Browse, review, and remember.</div>
+      </div>
+      <div class="progress-stats">
+        <div class="pstat"><div class="pstat-num">120+</div><div class="pstat-label">Words & phrases</div></div>
+        <div class="pstat"><div class="pstat-num">20+</div><div class="pstat-label">Phrasal verbs</div></div>
+        <div class="pstat"><div class="pstat-num">6</div><div class="pstat-label">Grammar topics</div></div>
+        <div class="pstat"><div class="pstat-num">7</div><div class="pstat-label">Pronunciation rules</div></div>
+      </div>
+    </div>
+
+    <!-- ══ VOCABULARY ══ -->
+    <div class="prog-section">
+      <div class="prog-section-title">📚 Vocabulary</div>
+      <div class="prog-section-sub">All word groups from your lessons — click any group to expand.</div>
+
+      <!-- Feelings -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-feelings')">
+          <div class="prog-group-icon">😮</div>
+          <div class="prog-group-name">-ED / -ING Adjectives</div>
+          <div class="prog-group-count">14 words</div>
+          <div class="prog-group-arrow" id="arr-g-feelings">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-feelings">
+          <div class="rule-card"><div class="rc-title">The Rule</div><div class="rc-body"><strong>-ED</strong> = how YOU feel &nbsp;|&nbsp; <strong>-ING</strong> = what causes the feeling</div><div class="rc-eg">I was <em>bored</em> (I felt boredom) · The lesson was <em>boring</em> (it caused boredom)</div></div>
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">bored / boring</div><div class="wc-trans">скучающий / скучный</div><div class="wc-ex">"I was bored. The film was boring."</div></div>
+            <div class="word-card"><div class="wc-word">exhausted / exhausting</div><div class="wc-trans">измотанный / изматывающий</div><div class="wc-ex">"She was exhausted after the exhausting race."</div></div>
+            <div class="word-card"><div class="wc-word">disappointed / disappointing</div><div class="wc-trans">разочарованный / разочаровывающий</div><div class="wc-ex">"He was disappointed. The result was disappointing."</div></div>
+            <div class="word-card"><div class="wc-word">astonished / astonishing</div><div class="wc-trans">изумлённый / изумительный</div><div class="wc-ex">"I was astonished. The news was astonishing."</div></div>
+            <div class="word-card"><div class="wc-word">excited / exciting</div><div class="wc-trans">взволнованный / захватывающий</div><div class="wc-ex">"The children were excited. It was an exciting match."</div></div>
+            <div class="word-card"><div class="wc-word">thrilled / thrilling</div><div class="wc-trans">восхищённый / захватывающий</div><div class="wc-ex">"She was thrilled. It was a thrilling experience."</div></div>
+            <div class="word-card"><div class="wc-word">frightened / frightening</div><div class="wc-trans">испуганный / пугающий</div><div class="wc-ex">"He was frightened. The dog was frightening."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personality -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-personality')">
+          <div class="prog-group-icon">🧠</div>
+          <div class="prog-group-name">Personality Adjectives</div>
+          <div class="prog-group-count">12 words</div>
+          <div class="prog-group-arrow" id="arr-g-personality">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-personality">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">reliable</div><div class="wc-trans">надёжный</div><div class="wc-ex">"She's so reliable — she always keeps her promises."</div></div>
+            <div class="word-card"><div class="wc-word">generous</div><div class="wc-trans">щедрый</div><div class="wc-ex">"He's incredibly generous — he always pays for everyone."</div></div>
+            <div class="word-card"><div class="wc-word">cheerful</div><div class="wc-trans">жизнерадостный</div><div class="wc-ex">"She has a cheerful personality that lights up the room."</div></div>
+            <div class="word-card"><div class="wc-word">emotionally stable</div><div class="wc-trans">эмоционально устойчивый</div><div class="wc-ex">"Even in a crisis, he remained emotionally stable."</div></div>
+            <div class="word-card"><div class="wc-word">greedy</div><div class="wc-trans">жадный</div><div class="wc-ex">"Don't be greedy — leave some food for the others."</div></div>
+            <div class="word-card"><div class="wc-word">insensitive</div><div class="wc-trans">бесчувственный</div><div class="wc-ex">"That was an insensitive comment."</div></div>
+            <div class="word-card"><div class="wc-word">reserved</div><div class="wc-trans">сдержанный</div><div class="wc-ex">"She's quiet reserved at first but very warm."</div></div>
+            <div class="word-card"><div class="wc-word">talkative</div><div class="wc-trans">разговорчивый</div><div class="wc-ex">"He's so talkative — I couldn't get a word in!"</div></div>
+            <div class="word-card"><div class="wc-word">strict</div><div class="wc-trans">строгий</div><div class="wc-ex">"Our teacher was very strict about deadlines."</div></div>
+            <div class="word-card"><div class="wc-word">tyrannical</div><div class="wc-trans">тиранический</div><div class="wc-ex">"The tyrannical manager shouted at staff every day."</div></div>
+            <div class="word-card"><div class="wc-word">reclusive</div><div class="wc-trans">замкнутый</div><div class="wc-ex">"After retiring, he became quite reclusive."</div></div>
+            <div class="word-card"><div class="wc-word">responsible</div><div class="wc-trans">ответственный</div><div class="wc-ex">"She's the most responsible person on the team."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-work')">
+          <div class="prog-group-icon">💼</div>
+          <div class="prog-group-name">Work & Jobs</div>
+          <div class="prog-group-count">18 words</div>
+          <div class="prog-group-arrow" id="arr-g-work">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-work">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">remote</div><div class="wc-trans">удалённый (о работе)</div><div class="wc-ex">"She works remotely from anywhere in the world."</div></div>
+            <div class="word-card"><div class="wc-word">incentives</div><div class="wc-trans">стимулы, поощрения</div><div class="wc-ex">"The team receives cash incentives for reaching targets."</div></div>
+            <div class="word-card"><div class="wc-word">perks</div><div class="wc-trans">привилегии, бонусы</div><div class="wc-ex">"One perk of this job is free gym membership."</div></div>
+            <div class="word-card"><div class="wc-word">negotiate</div><div class="wc-trans">договариваться</div><div class="wc-ex">"She negotiated a higher salary before signing."</div></div>
+            <div class="word-card"><div class="wc-word">in charge of</div><div class="wc-trans">отвечать за</div><div class="wc-ex">"She is in charge of a team of twenty people."</div></div>
+            <div class="word-card"><div class="wc-word">annual</div><div class="wc-trans">ежегодный</div><div class="wc-ex">"The company has an annual review every December."</div></div>
+            <div class="word-card"><div class="wc-word">average</div><div class="wc-trans">средний</div><div class="wc-ex">"The average salary for a teacher is €2,000."</div></div>
+            <div class="word-card"><div class="wc-word">earn</div><div class="wc-trans">зарабатывать</div><div class="wc-ex">"How much do nurses earn in your country?"</div></div>
+            <div class="word-card"><div class="wc-word">debt</div><div class="wc-trans">долг</div><div class="wc-ex">"After university he was in debt."</div></div>
+            <div class="word-card"><div class="wc-word">deserve</div><div class="wc-trans">заслуживать</div><div class="wc-ex">"You work so hard — you deserve a holiday."</div></div>
+            <div class="word-card"><div class="wc-word">insurance</div><div class="wc-trans">страховка</div><div class="wc-ex">"The job includes health insurance."</div></div>
+            <div class="word-card"><div class="wc-word">night shift / day shift</div><div class="wc-trans">ночная / дневная смена</div><div class="wc-ex">"He works the night shift and sleeps during the day."</div></div>
+            <div class="word-card"><div class="wc-word">permanent</div><div class="wc-trans">постоянный</div><div class="wc-ex">"She finally got a permanent job."</div></div>
+            <div class="word-card"><div class="wc-word">temporary</div><div class="wc-trans">временный</div><div class="wc-ex">"It's just a temporary position — three months."</div></div>
+            <div class="word-card"><div class="wc-word">take advantage of</div><div class="wc-trans">воспользоваться</div><div class="wc-ex">"She wanted to take advantage of the opportunity."</div></div>
+            <div class="word-card"><div class="wc-word">make up</div><div class="wc-trans">придумывать</div><div class="wc-ex">"He made up a story about being sick."</div></div>
+            <div class="word-card"><div class="wc-word">full-time / part-time</div><div class="wc-trans">полная / неполная занятость</div><div class="wc-ex">"She works full-time and studies in the evenings."</div></div>
+            <div class="word-card"><div class="wc-word">conditions</div><div class="wc-trans">условия (труда)</div><div class="wc-ex">"The company offers good working conditions."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hobbies & Objects -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-hobbies')">
+          <div class="prog-group-icon">🧵</div>
+          <div class="prog-group-name">Hobbies, Tools & Equipment</div>
+          <div class="prog-group-count">12 words</div>
+          <div class="prog-group-arrow" id="arr-g-hobbies">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-hobbies">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">knitting</div><div class="wc-trans">вязание спицами</div><div class="wc-ex">"She made a beautiful jumper last winter."</div></div>
+            <div class="word-card"><div class="wc-word">sewing</div><div class="wc-trans">шитьё</div><div class="wc-ex">"She learned sewing from her grandmother."</div></div>
+            <div class="word-card"><div class="wc-word">DIY</div><div class="wc-trans">сделай сам</div><div class="wc-ex">"He does all his own repairs — he loves DIY."</div></div>
+            <div class="word-card"><div class="wc-word">sailing</div><div class="wc-trans">парусный спорт</div><div class="wc-ex">"They spent the weekend sailing along the coast."</div></div>
+            <div class="word-card"><div class="wc-word">needle & thread</div><div class="wc-trans">иголка и нитка</div><div class="wc-ex">"You need a needle and thread to stitch the fabric."</div></div>
+            <div class="word-card"><div class="wc-word">screwdriver</div><div class="wc-trans">отвёртка</div><div class="wc-ex">"Use a screwdriver to tighten the screws."</div></div>
+            <div class="word-card"><div class="wc-word">saddle</div><div class="wc-trans">седло</div><div class="wc-ex">"The saddle on her bicycle was too high."</div></div>
+            <div class="word-card"><div class="wc-word">helmet</div><div class="wc-trans">шлем</div><div class="wc-ex">"You must wear a helmet when riding a bike."</div></div>
+            <div class="word-card"><div class="wc-word">wet suit</div><div class="wc-trans">гидрокостюм</div><div class="wc-ex">"You'll need a wet suit for diving in cold water."</div></div>
+            <div class="word-card"><div class="wc-word">striped</div><div class="wc-trans">полосатый</div><div class="wc-ex">"He wore a striped shirt to the interview."</div></div>
+            <div class="word-card"><div class="wc-word">meal</div><div class="wc-trans">приём пищи</div><div class="wc-ex">"She prepares three meals a day for the family."</div></div>
+            <div class="word-card"><div class="wc-word">screen</div><div class="wc-trans">экран</div><div class="wc-ex">"She stared at the screen for hours."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social & Formal -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-social')">
+          <div class="prog-group-icon">🗣️</div>
+          <div class="prog-group-name">Social & Formal Language</div>
+          <div class="prog-group-count">12 words</div>
+          <div class="prog-group-arrow" id="arr-g-social">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-social">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">obligatory</div><div class="wc-trans">обязательный</div><div class="wc-ex">"It's obligatory to wear a seatbelt — it's the law."</div></div>
+            <div class="word-card"><div class="wc-word">queue</div><div class="wc-trans">очередь</div><div class="wc-ex">"Please form an orderly queue."</div></div>
+            <div class="word-card"><div class="wc-word">complain / moan</div><div class="wc-trans">жаловаться / ныть</div><div class="wc-ex">"She always moans about everything."</div></div>
+            <div class="word-card"><div class="wc-word">literal</div><div class="wc-trans">буквальный</div><div class="wc-ex">"He took the joke too literally."</div></div>
+            <div class="word-card"><div class="wc-word">accept</div><div class="wc-trans">принимать</div><div class="wc-ex">"She accepted the offer without hesitation."</div></div>
+            <div class="word-card"><div class="wc-word">discuss / discussion</div><div class="wc-trans">обсуждать / обсуждение</div><div class="wc-ex">"We need to discuss this before deciding."</div></div>
+            <div class="word-card"><div class="wc-word">none of your business</div><div class="wc-trans">не твоё дело</div><div class="wc-ex">"How much do I earn? None of your business!"</div></div>
+            <div class="word-card"><div class="wc-word">pay attention</div><div class="wc-trans">обращать внимание</div><div class="wc-ex">"Please pay attention — this will be on the exam."</div></div>
+            <div class="word-card"><div class="wc-word">further</div><div class="wc-trans">дальше, кроме того</div><div class="wc-ex">"For further information, contact the office."</div></div>
+            <div class="word-card"><div class="wc-word">permanent / temporary</div><div class="wc-trans">постоянный / временный</div><div class="wc-ex">"Is the position permanent or temporary?"</div></div>
+            <div class="word-card"><div class="wc-word">sympathy</div><div class="wc-trans">сочувствие</div><div class="wc-ex">"She showed great sympathy when he lost his job."</div></div>
+            <div class="word-card"><div class="wc-word">responsibility</div><div class="wc-trans">ответственность</div><div class="wc-ex">"Taking care of siblings is a big responsibility."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Family & Society -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-family')">
+          <div class="prog-group-icon">👨‍👩‍👧</div>
+          <div class="prog-group-name">Family, People & Society</div>
+          <div class="prog-group-count">14 words</div>
+          <div class="prog-group-arrow" id="arr-g-family">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-family">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">familiar</div><div class="wc-trans">знакомый</div><div class="wc-ex">"Her face looked familiar — I'd seen her before."</div></div>
+            <div class="word-card"><div class="wc-word">inherit</div><div class="wc-trans">наследовать</div><div class="wc-ex">"She will inherit the house from her grandmother."</div></div>
+            <div class="word-card"><div class="wc-word">pretend</div><div class="wc-trans">притворяться</div><div class="wc-ex">"Children often pretend to be asleep."</div></div>
+            <div class="word-card"><div class="wc-word">stroller</div><div class="wc-trans">детская коляска</div><div class="wc-ex">"She pushed the stroller through the park."</div></div>
+            <div class="word-card"><div class="wc-word">hand in</div><div class="wc-trans">сдавать (работу)</div><div class="wc-ex">"Please hand in your homework by Friday."</div></div>
+            <div class="word-card"><div class="wc-word">allow sb to do sth</div><div class="wc-trans">разрешать кому-то</div><div class="wc-ex">"Are you allowed to use your phone in class?"</div></div>
+            <div class="word-card"><div class="wc-word">decades</div><div class="wc-trans">десятилетия</div><div class="wc-ex">"The tradition survived for decades."</div></div>
+            <div class="word-card"><div class="wc-word">tirelessly</div><div class="wc-trans">неустанно</div><div class="wc-ex">"She worked tirelessly for this community."</div></div>
+            <div class="word-card"><div class="wc-word">remain</div><div class="wc-trans">оставаться</div><div class="wc-ex">"She remained calm despite the chaos."</div></div>
+            <div class="word-card"><div class="wc-word">take part in</div><div class="wc-trans">участвовать в</div><div class="wc-ex">"Everyone is invited to take part in the event."</div></div>
+            <div class="word-card"><div class="wc-word">plague</div><div class="wc-trans">чума, эпидемия</div><div class="wc-ex">"The Black Death was a terrible plague."</div></div>
+            <div class="word-card"><div class="wc-word">bury</div><div class="wc-trans">хоронить</div><div class="wc-ex">"They buried him in the village churchyard."</div></div>
+            <div class="word-card"><div class="wc-word">sequence</div><div class="wc-trans">последовательность</div><div class="wc-ex">"Tell me the correct sequence of events."</div></div>
+            <div class="word-card"><div class="wc-word">situated</div><div class="wc-trans">расположенный</div><div class="wc-ex">"The village is situated in a beautiful valley."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ability & Progress -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-ability')">
+          <div class="prog-group-icon">🎯</div>
+          <div class="prog-group-name">Ability, Fluency & Progress</div>
+          <div class="prog-group-count">12 words</div>
+          <div class="prog-group-arrow" id="arr-g-ability">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-ability">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">ability</div><div class="wc-trans">способность, умение</div><div class="wc-ex">"She has an extraordinary ability to remember faces."</div></div>
+            <div class="word-card"><div class="wc-word">fluency</div><div class="wc-trans">беглость речи</div><div class="wc-ex">"Her fluency in French improved after moving to Paris."</div></div>
+            <div class="word-card"><div class="wc-word">percentage</div><div class="wc-trans">процент</div><div class="wc-ex">"Only a small percentage of students failed."</div></div>
+            <div class="word-card"><div class="wc-word">gradually</div><div class="wc-trans">постепенно</div><div class="wc-ex">"Her confidence gradually improved over the year."</div></div>
+            <div class="word-card"><div class="wc-word">maintain</div><div class="wc-trans">поддерживать</div><div class="wc-ex">"It's important to maintain a healthy routine."</div></div>
+            <div class="word-card"><div class="wc-word">devote</div><div class="wc-trans">посвящать</div><div class="wc-ex">"She devotes most of her weekends to painting."</div></div>
+            <div class="word-card"><div class="wc-word">applicable</div><div class="wc-trans">применимый</div><div class="wc-ex">"This rule is only applicable to staff hired after 2022."</div></div>
+            <div class="word-card"><div class="wc-word">chores</div><div class="wc-trans">домашние дела</div><div class="wc-ex">"We had to finish our chores before watching TV."</div></div>
+            <div class="word-card"><div class="wc-word">pour</div><div class="wc-trans">наливать</div><div class="wc-ex">"She poured the juice carefully into the glass."</div></div>
+            <div class="word-card"><div class="wc-word">sand</div><div class="wc-trans">зачищать наждачной бумагой</div><div class="wc-ex">"Sand the surface before painting the wood."</div></div>
+            <div class="word-card"><div class="wc-word">mature</div><div class="wc-trans">зрелый, взрослый</div><div class="wc-ex">"She is very mature for her age."</div></div>
+            <div class="word-card"><div class="wc-word">indeed</div><div class="wc-trans">действительно</div><div class="wc-ex">"It was, indeed, one of the best films I've seen."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connectors -->
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-connectors')">
+          <div class="prog-group-icon">🔗</div>
+          <div class="prog-group-name">Connectors & Discourse Markers</div>
+          <div class="prog-group-count">6 words</div>
+          <div class="prog-group-arrow" id="arr-g-connectors">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-connectors">
+          <div class="word-grid">
+            <div class="word-card"><div class="wc-word">however</div><div class="wc-trans">однако</div><div class="wc-ex">"She studied hard. However, she failed the exam."</div></div>
+            <div class="word-card"><div class="wc-word">during</div><div class="wc-trans">во время</div><div class="wc-ex">"During the film, she fell asleep twice."</div></div>
+            <div class="word-card"><div class="wc-word">as soon as</div><div class="wc-trans">как только</div><div class="wc-ex">"As soon as he arrived, he asked for water."</div></div>
+            <div class="word-card"><div class="wc-word">as well as</div><div class="wc-trans">а также</div><div class="wc-ex">"He speaks French as well as German."</div></div>
+            <div class="word-card"><div class="wc-word">even though</div><div class="wc-trans">несмотря на то что</div><div class="wc-ex">"Even though it was explained twice, he didn't understand."</div></div>
+            <div class="word-card"><div class="wc-word">furthermore</div><div class="wc-trans">кроме того</div><div class="wc-ex">"She is reliable and, furthermore, extremely talented."</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ IDIOMS & EXPRESSIONS ══ -->
+    <div class="prog-section">
+      <div class="prog-section-title">💬 Idioms & Expressions</div>
+      <div class="prog-section-sub">Fixed phrases you can use naturally in conversation and writing.</div>
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-idioms')">
+          <div class="prog-group-icon">🐱</div>
+          <div class="prog-group-name">Idioms & Fixed Expressions</div>
+          <div class="prog-group-count">11 expressions</div>
+          <div class="prog-group-arrow" id="arr-g-idioms">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-idioms">
+          <div class="expr-list">
+            <div class="expr-item"><div class="expr-phrase">not see eye to eye</div><div class="expr-meaning">не сходиться во взглядах — "We don't see eye to eye on politics."</div></div>
+            <div class="expr-item"><div class="expr-phrase">ups and downs</div><div class="expr-meaning">взлёты и падения — "Every relationship has its ups and downs."</div></div>
+            <div class="expr-item"><div class="expr-phrase">fight like cat and dog</div><div class="expr-meaning">ссориться как кошка с собакой — "They fought like cat and dog."</div></div>
+            <div class="expr-item"><div class="expr-phrase">fair enough</div><div class="expr-meaning">ладно, справедливо — "I can't come." "Fair enough, no problem."</div></div>
+            <div class="expr-item"><div class="expr-phrase">tell off</div><div class="expr-meaning">отчитывать — "The teacher told him off for being late."</div></div>
+            <div class="expr-item"><div class="expr-phrase">lose patience</div><div class="expr-meaning">терять терпение — "I'm starting to lose patience."</div></div>
+            <div class="expr-item"><div class="expr-phrase">answer someone's prayers</div><div class="expr-meaning">стать ответом на чьи-то молитвы — "This job answered all my prayers."</div></div>
+            <div class="expr-item"><div class="expr-phrase">do your bit</div><div class="expr-meaning">вносить свой вклад — "Everyone needs to do their bit."</div></div>
+            <div class="expr-item"><div class="expr-phrase">have a good time</div><div class="expr-meaning">хорошо провести время — "I hope you have a good time at the party!"</div></div>
+            <div class="expr-item"><div class="expr-phrase">change your mind</div><div class="expr-meaning">передумать — "She changed her mind about selling the house."</div></div>
+            <div class="expr-item"><div class="expr-phrase">make sure</div><div class="expr-meaning">убедиться — "Make sure you lock the door before you leave."</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PHRASAL VERBS ══ -->
+    <div class="prog-section">
+      <div class="prog-section-title">🔄 Phrasal Verbs</div>
+      <div class="prog-section-sub">Two groups — your original list and the new set.</div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-pv1')">
+          <div class="prog-group-icon">🔄</div>
+          <div class="prog-group-name">Core Phrasal Verbs</div>
+          <div class="prog-group-count">12 verbs</div>
+          <div class="prog-group-arrow" id="arr-g-pv1">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-pv1">
+          <div class="expr-list">
+            <div class="expr-item"><div class="expr-phrase">pick up</div><div class="expr-meaning">подхватить (язык) / забрать — "She picked up Spanish just by living in Madrid."</div></div>
+            <div class="expr-item"><div class="expr-phrase">give up</div><div class="expr-meaning">сдаться, бросить — "Don't give up — you're so close!"</div></div>
+            <div class="expr-item"><div class="expr-phrase">bring up</div><div class="expr-meaning">(1) воспитывать; (2) упомянуть — "She was brought up in a small village." / "He brought up an interesting point."</div></div>
+            <div class="expr-item"><div class="expr-phrase">look up</div><div class="expr-meaning">искать в словаре — "Look it up in the dictionary."</div></div>
+            <div class="expr-item"><div class="expr-phrase">died out</div><div class="expr-meaning">вымереть, исчезнуть — "That tradition has died out."</div></div>
+            <div class="expr-item"><div class="expr-phrase">try on</div><div class="expr-meaning">примерить — "She tried on three dresses before choosing."</div></div>
+            <div class="expr-item"><div class="expr-phrase">keep an eye on</div><div class="expr-meaning">присматривать за — "Could you keep an eye on my bag?"</div></div>
+            <div class="expr-item"><div class="expr-phrase">pour</div><div class="expr-meaning">наливать — "Pour the tea carefully — it's very hot."</div></div>
+            <div class="expr-item"><div class="expr-phrase">continue</div><div class="expr-meaning">продолжать — "Please continue — I'm listening."</div></div>
+            <div class="expr-item"><div class="expr-phrase">look at / for / through / up</div><div class="expr-meaning">смотреть на / искать / просматривать / искать в словаре</div></div>
+            <div class="expr-item"><div class="expr-phrase">point at</div><div class="expr-meaning">указывать на — "He pointed at the board."</div></div>
+            <div class="expr-item"><div class="expr-phrase">hand in</div><div class="expr-meaning">сдавать — "Please hand in your homework by Friday."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-pv2')">
+          <div class="prog-group-icon">🤝</div>
+          <div class="prog-group-name">New Phrasal Verbs</div>
+          <div class="prog-group-count">8 verbs</div>
+          <div class="prog-group-arrow" id="arr-g-pv2">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-pv2">
+          <div class="expr-list">
+            <div class="expr-item"><div class="expr-phrase">run into</div><div class="expr-meaning">случайно встретить — "I ran into my old teacher at the supermarket."</div></div>
+            <div class="expr-item"><div class="expr-phrase">hang out</div><div class="expr-meaning">проводить время вместе — "We used to hang out at the park every evening."</div></div>
+            <div class="expr-item"><div class="expr-phrase">call back</div><div class="expr-meaning">перезвонить — "I'll call you back in an hour."</div></div>
+            <div class="expr-item"><div class="expr-phrase">show up</div><div class="expr-meaning">появиться, прийти — "Nobody showed up to the meeting."</div></div>
+            <div class="expr-item"><div class="expr-phrase">fall out</div><div class="expr-meaning">поссориться — "They fell out badly and haven't spoken since."</div></div>
+            <div class="expr-item"><div class="expr-phrase">give back</div><div class="expr-meaning">вернуть — "Can I borrow your pen? I'll give it back."</div></div>
+            <div class="expr-item"><div class="expr-phrase">cut down on</div><div class="expr-meaning">сократить потребление — "The doctor told him to cut down on sugar."</div></div>
+            <div class="expr-item"><div class="expr-phrase">cheer up</div><div class="expr-meaning">взбодриться / подбодрить — "Her friends tried to cheer her up."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-preps')">
+          <div class="prog-group-icon">➡️</div>
+          <div class="prog-group-name">Prepositions & Collocations</div>
+          <div class="prog-group-count">8 patterns</div>
+          <div class="prog-group-arrow" id="arr-g-preps">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-preps">
+          <div class="expr-list">
+            <div class="expr-item"><div class="expr-phrase">responsible for</div><div class="expr-meaning">"She is responsible for managing the whole department."</div></div>
+            <div class="expr-item"><div class="expr-phrase">depend on</div><div class="expr-meaning">"Everything depends on the weather."</div></div>
+            <div class="expr-item"><div class="expr-phrase">applicable to</div><div class="expr-meaning">"This rule is applicable to all staff."</div></div>
+            <div class="expr-item"><div class="expr-phrase">born with</div><div class="expr-meaning">"She was born with a gift for music."</div></div>
+            <div class="expr-item"><div class="expr-phrase">in front of</div><div class="expr-meaning">"She stood in front of the door."</div></div>
+            <div class="expr-item"><div class="expr-phrase">in charge of</div><div class="expr-meaning">"He is in charge of the whole project."</div></div>
+            <div class="expr-item"><div class="expr-phrase">look at / for / through / up</div><div class="expr-meaning">at = смотреть · for = искать · through = просматривать · up = искать в словаре</div></div>
+            <div class="expr-item"><div class="expr-phrase">point at</div><div class="expr-meaning">"Don't point at people — it's rude!"</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GRAMMAR ══ -->
+    <div class="prog-section">
+      <div class="prog-section-title">✏️ Grammar</div>
+      <div class="prog-section-sub">Rules and corrections from your lessons.</div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-usedto')">
+          <div class="prog-group-icon">⏳</div>
+          <div class="prog-group-name">Used to / Be used to / Get used to</div>
+          <div class="prog-group-count">3 forms</div>
+          <div class="prog-group-arrow" id="arr-g-usedto">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-usedto">
+          <div class="rule-card"><div class="rc-title">used to + infinitive</div><div class="rc-body">Past habit — no longer true today.</div><div class="rc-eg">"I used to smoke but I quit five years ago." · "She used to walk to school every day."</div></div>
+          <div class="rule-card"><div class="rc-title">be used to + -ing</div><div class="rc-body">Accustomed to something NOW — it doesn't feel strange anymore.</div><div class="rc-eg">"She is used to working night shifts — it doesn't bother her." · "They are used to the cold weather."</div></div>
+          <div class="rule-card"><div class="rc-title">get used to + -ing</div><div class="rc-body">The process of becoming accustomed — still happening.</div><div class="rc-eg">"It's hard at first, but you'll get used to waking up early." · "He is getting used to the new schedule."</div></div>
+          <div class="rule-card" style="border-left-color:var(--rust)"><div class="rc-title">⚠ Common error</div><div class="rc-body">He was used to <span style="text-decoration:line-through;color:var(--rust)">listen</span> to loud music. → He was used to <strong>listening</strong> to loud music.</div></div>
+        </div>
+      </div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-passive')">
+          <div class="prog-group-icon">🔀</div>
+          <div class="prog-group-name">Passive Voice</div>
+          <div class="prog-group-count">4 tenses</div>
+          <div class="prog-group-arrow" id="arr-g-passive">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-passive">
+          <div class="rule-card"><div class="rc-title">Present Simple Passive</div><div class="rc-body">is / are + past participle</div><div class="rc-eg">"The report is reviewed every year." · "English is spoken all over the world."</div></div>
+          <div class="rule-card"><div class="rc-title">Past Simple Passive</div><div class="rc-body">was / were + past participle</div><div class="rc-eg">"The letter was sent yesterday morning." · "The building was built in 1905."</div></div>
+          <div class="rule-card"><div class="rc-title">Present Continuous Passive</div><div class="rc-body">is / are being + past participle</div><div class="rc-eg">"A new hospital is being built in the city centre."</div></div>
+          <div class="rule-card"><div class="rc-title">Present Perfect Passive</div><div class="rc-body">has / have been + past participle</div><div class="rc-eg">"The results have already been announced by the committee."</div></div>
+        </div>
+      </div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-tenses')">
+          <div class="prog-group-icon">📅</div>
+          <div class="prog-group-name">Past Simple / Past Perfect / Past Continuous</div>
+          <div class="prog-group-count">3 tenses</div>
+          <div class="prog-group-arrow" id="arr-g-tenses">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-tenses">
+          <div class="rule-card"><div class="rc-title">Past Simple</div><div class="rc-body">Completed action at a specific time in the past.</div><div class="rc-eg">"She left at 8am." · "He called me yesterday."</div></div>
+          <div class="rule-card"><div class="rc-title">Past Continuous</div><div class="rc-body">Action in progress at a specific moment in the past. Often interrupted by another action.</div><div class="rc-eg">"He was reading a book when the phone rang." · "I was making dinner when I remembered the meeting."</div></div>
+          <div class="rule-card"><div class="rc-title">Past Perfect</div><div class="rc-body">Action completed BEFORE another past action. The "earlier" past.</div><div class="rc-eg">"When I arrived, she had already left." · "By the time we got there, the film had started."</div></div>
+        </div>
+      </div>
+
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-errors')">
+          <div class="prog-group-icon">⚠️</div>
+          <div class="prog-group-name">Common Errors — Corrected</div>
+          <div class="prog-group-count">10 errors</div>
+          <div class="prog-group-arrow" id="arr-g-errors">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-errors">
+          <div class="expr-list">
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ I born</div><div class="expr-meaning">✓ <strong>I was born</strong> — always use passive for birth</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ He loves see</div><div class="expr-meaning">✓ <strong>He loves seeing</strong> — after love/like/enjoy use -ing</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ in the twenties</div><div class="expr-meaning">✓ <strong>in her twenties</strong> — always use possessive pronoun</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ takes me arriving</div><div class="expr-meaning">✓ <strong>takes me to arrive</strong> — it takes + time + to + infinitive</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ very sympathy</div><div class="expr-meaning">✓ <strong>very sympathetic</strong> — sympathy is a noun, not an adjective</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ His death is come</div><div class="expr-meaning">✓ <strong>His death came</strong> — past simple, not present</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ bill not include</div><div class="expr-meaning">✓ <strong>The bill does not include</strong> — needs auxiliary verb</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ If they are agree</div><div class="expr-meaning">✓ <strong>If they agree</strong> — agree is a verb, not an adjective</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ smoking in the outside</div><div class="expr-meaning">✓ <strong>smoking in the outdoor area</strong> — outside is an adverb; outdoor is the adjective</div></div>
+            <div class="expr-item"><div class="expr-phrase" style="color:var(--rust)">✗ told off to his son</div><div class="expr-meaning">✓ <strong>told his son off</strong> — tell off takes a direct object, no preposition</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PRONUNCIATION ══ -->
+    <div class="prog-section">
+      <div class="prog-section-title">🔊 Pronunciation</div>
+      <div class="prog-section-sub">Tricky words — stress and sounds to remember.</div>
+      <div class="prog-group">
+        <div class="prog-group-header" onclick="toggleGroup('g-pron')">
+          <div class="prog-group-icon">🗣️</div>
+          <div class="prog-group-name">Stress & Tricky Sounds</div>
+          <div class="prog-group-count">7 words</div>
+          <div class="prog-group-arrow" id="arr-g-pron">▶</div>
+        </div>
+        <div class="prog-group-body" id="g-pron">
+          <div style="margin-top:12px">
+            <div class="pron-item">
+              <div class="pron-word-big"><span style="color:var(--rust);text-decoration:underline">COT</span>·tage</div>
+              <div class="pron-ipa">/ˈkɒt.ɪdʒ/</div>
+              <div class="pron-note-small">Stress on the FIRST syllable. The -age ending sounds like /ɪdʒ/, not /age/.</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big">ma·<span style="color:var(--rust);text-decoration:underline">TURE</span></div>
+              <div class="pron-ipa">/məˈtjʊər/</div>
+              <div class="pron-note-small">Stress on the SECOND syllable. The first 'a' is a very short schwa /ə/.</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big"><span style="color:var(--rust);text-decoration:underline">FOR</span>·eign</div>
+              <div class="pron-ipa">/ˈfɒr.ɪn/</div>
+              <div class="pron-note-small">Stress on the FIRST syllable. The 'g' is completely SILENT. Say "FOR-in".</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big"><span style="color:var(--rust);text-decoration:underline">ALT</span>·zhei·mer</div>
+              <div class="pron-ipa">/ˈælts.haɪ.mər/</div>
+              <div class="pron-note-small">Starts with /ælts/ — the 'z' sounds like /ts/. German origin.</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big">wind</div>
+              <div class="pron-ipa">/wɪnd/ or /waɪnd/</div>
+              <div class="pron-note-small"><strong>wind</strong> (moving air) = /wɪnd/ (short i) · <strong>wind</strong> (to twist) = /waɪnd/ (long i, rhymes with "find")</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big"><span style="color:var(--rust);text-decoration:underline">STAN</span>·dard</div>
+              <div class="pron-ipa">/ˈstæn.dərd/</div>
+              <div class="pron-note-small">Stress on the FIRST syllable. Short 'a' — /stæn/, not /staan/.</div>
+            </div>
+            <div class="pron-item">
+              <div class="pron-word-big"><span style="color:var(--rust);text-decoration:underline">CON</span>·stant·ly</div>
+              <div class="pron-ipa">/ˈkɒn.stənt.li/</div>
+              <div class="pron-note-small">Stress on the FIRST syllable. Adverbs ending in -ly almost always stress the root syllable.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOPIC SELECT -->
+<div id="topic-select" class="screen">
+  <div class="topics-page">
+    <div class="top-bar">
+      <button class="back-btn" onclick="showScreen('landing')">← Back</button>
+      <div class="screen-title">Choose a Topic</div>
+    </div>
+    <div id="topicsContainer"></div>
+  </div>
+</div>
+
+<!-- EXERCISE SCREEN -->
+<div id="exercise-screen" class="screen">
+  <div id="examBanner" class="exam-banner" style="display:none">⏱ EXAM MODE — No feedback until the end</div>
+  <div class="exercise-header">
+    <button class="back-btn" style="color:var(--cream);border-color:rgba(255,255,255,.2);flex-shrink:0" onclick="showScreen('topic-select')">← Topics</button>
+    <div class="ex-title" id="exHeaderTitle"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="score-badge" id="scoreBadge">0 / 0</div>
+    <div class="timer-display" id="timerDisplay" style="display:none">20:00</div>
+  </div>
+  <div class="exercise-body" id="exerciseBody"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen" class="screen">
+  <div class="results-wrap">
+    <div class="results-emoji" id="resultsEmoji">🎉</div>
+    <div class="results-title" id="resultsTitle">Well done!</div>
+    <div class="results-score" id="resultsScore">0%</div>
+    <div class="results-sub" id="resultsSub"></div>
+    <div class="results-btns">
+      <button class="res-btn primary" onclick="retryExercise()">Try Again</button>
+      <button class="res-btn outline" onclick="showScreen('topic-select')">All Topics</button>
+      <button class="res-btn outline" onclick="showScreen('landing')">Home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// INTRO PAGE BUILDERS
+// ═══════════════════════════════════════
+
+function introEdIng(){
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Before You Start</div>
+    <div class="ex-heading">-ED and -ING Adjectives</div>
+    <div class="ex-instruction">Read this page carefully. Then move on to the exercises.</div>
+    <div class="intro-page">
+      <h2>The Golden Rule</h2>
+      <div class="intro-sub">Two endings. Completely different meanings.</div>
+      <div class="rule-grid">
+        <div class="rule-col">
+          <h3 style="color:var(--blue)">-ED → How YOU feel</h3>
+          <ul>
+            <li>I am <span>bored</span> — I feel boredom</li>
+            <li>She is <span>exhausted</span> — she has no energy</li>
+            <li>He was <span>astonished</span> — he felt surprise</li>
+            <li>They are <span>excited</span> — they feel excitement</li>
+            <li>She felt <span>disappointed</span> — she expected more</li>
+          </ul>
+        </div>
+        <div class="rule-col">
+          <h3 style="color:var(--rust)">-ING → What causes the feeling</h3>
+          <ul>
+            <li>The lesson is <span>boring</span> — it causes boredom</li>
+            <li>The race was <span>exhausting</span> — it drained energy</li>
+            <li>The news was <span>astonishing</span> — it shocked people</li>
+            <li>The match was <span>exciting</span> — it caused excitement</li>
+            <li>The result was <span>disappointing</span> — it let people down</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rule-box">
+        <h3>Quick Test — Ask yourself:</h3>
+        <p>Is it a <strong>person or animal</strong> experiencing the feeling? → use <strong>-ED</strong><br>
+        Is it a <strong>thing, situation, or experience</strong> that creates the feeling? → use <strong>-ING</strong></p>
+        <div class="eg">❌ The film was <em>bored</em>. ✓ The film was <em>boring</em>.<br>
+        ❌ I was <em>boring</em> during the film. ✓ I was <em>bored</em> during the film.</div>
+      </div>
+      <table class="eg-table">
+        <tr><th>Root</th><th class="ed">-ED (feeling it)</th><th class="ing">-ING (causing it)</th></tr>
+        <tr><td>bore</td><td class="ed">bored</td><td class="ing">boring</td></tr>
+        <tr><td>exhaust</td><td class="ed">exhausted</td><td class="ing">exhausting</td></tr>
+        <tr><td>astonish</td><td class="ed">astonished</td><td class="ing">astonishing</td></tr>
+        <tr><td>excite</td><td class="ed">excited</td><td class="ing">exciting</td></tr>
+        <tr><td>disappoint</td><td class="ed">disappointed</td><td class="ing">disappointing</td></tr>
+        <tr><td>thrill</td><td class="ed">thrilled</td><td class="ing">thrilling</td></tr>
+        <tr><td>frighten</td><td class="ed">frightened</td><td class="ing">frightening</td></tr>
+      </table>
+      <div class="warning-box">⚠️ <strong>Common mistake:</strong> "He was very <strong style='text-decoration:line-through'>boring</strong>" — this means HE is a dull person! If you mean he was tired of something, say "He was very <strong>bored</strong>."</div>
+    </div>
+    <div class="ex-nav">
+      <span></span>
+      <button class="nav-btn" onclick="nextEx()">Start Exercises →</button>
+    </div>
+  </div>`;
+}
+
+function flashcards(words, title){
+  // words = [{word, translation, example}]
+  const id = 'fc_'+Math.random().toString(36).slice(2,7);
+  window._fc = window._fc || {};
+  window._fc[id] = {words, idx:0, seen: new Set()};
+  const dots = words.map((_,i)=>`<div class="fc-dot" id="${id}-dot-${i}"></div>`).join('');
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Flashcards</div>
+    <div class="ex-heading">${title}</div>
+    <div class="ex-instruction">Click each card to reveal the translation and example. Work through all the cards before starting the exercises.</div>
+    <div class="intro-page" style="padding:24px">
+      <div class="fc-controls">
+        <div class="fc-counter" id="${id}-counter">Card 1 of ${words.length}</div>
+        <div style="display:flex;gap:8px">
+          <button class="fc-btn" onclick="fcShuffle('${id}')">🔀 Shuffle</button>
+          <button class="fc-btn" onclick="fcReset('${id}')">↺ Reset</button>
+        </div>
+      </div>
+      <div class="fc-wrap" onclick="fcFlip('${id}')">
+        <div class="fc-inner" id="${id}-inner">
+          <div class="fc-face fc-front">
+            <div class="fc-label">WORD</div>
+            <div class="fc-word" id="${id}-word">${words[0].word}</div>
+            <div class="fc-hint">tap to reveal →</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-label">MEANING & EXAMPLE</div>
+            <div class="fc-word" id="${id}-trans">${words[0].translation}</div>
+            <div class="fc-example" id="${id}-ex">${words[0].example}</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-dots" id="${id}-dots">${dots}</div>
+      <div class="fc-nav" style="margin-top:16px">
+        <button class="fc-btn" onclick="fcPrev('${id}')">← Prev</button>
+        <button class="fc-btn primary" onclick="fcNext('${id}')">Next →</button>
+      </div>
+    </div>
+    <div class="ex-nav">
+      <span></span>
+      <button class="nav-btn" onclick="nextEx()">Start Exercises →</button>
+    </div>
+  </div>`;
+}
+
+function introGrammar(){
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Grammar Reference</div>
+    <div class="ex-heading">Common Grammar Mistakes</div>
+    <div class="ex-instruction">Study the correct forms before doing the exercises. These are the exact mistakes that appear in the exercises.</div>
+    <div class="intro-page">
+      <div class="compare-grid" style="margin-bottom:14px">
+        <div class="compare-card wrong-card"><h4 class="w">✗ Wrong</h4><p>I <strong>born</strong> in 1995.<br>He loves <strong>see</strong> friends.<br>She is in <strong>the</strong> twenties.<br>It takes me <strong>arriving</strong>.</p></div>
+        <div class="compare-card right-card"><h4 class="r">✓ Correct</h4><p>I <strong>was born</strong> in 1995.<br>He loves <strong>seeing</strong> friends.<br>She is in <strong>her</strong> twenties.<br>It takes me <strong>to arrive</strong>.</p></div>
+      </div>
+      <div class="rule-box">
+        <h3>USED TO / BE USED TO / GET USED TO</h3>
+        <table class="eg-table">
+          <tr><th>Form</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td><span class="form">used to + infinitive</span></td><td>past habit (no longer true)</td><td>I <em>used to smoke</em> but I quit.</td></tr>
+          <tr><td><span class="form">be used to + -ing</span></td><td>accustomed to (now)</td><td>She <em>is used to working</em> nights.</td></tr>
+          <tr><td><span class="form">get used to + -ing</span></td><td>becoming accustomed</td><td>You'll <em>get used to waking</em> early.</td></tr>
+        </table>
+        <div class="eg" style="margin-top:10px">❌ He was used to <strong>listen</strong> → ✓ He was used to <strong>listening</strong></div>
+      </div>
+      <div class="rule-box">
+        <h3>Passive Voice</h3>
+        <table class="eg-table">
+          <tr><th>Tense</th><th>Form</th><th>Example</th></tr>
+          <tr><td>Present Simple</td><td class="form">is/are + past participle</td><td>It <em>is reviewed</em> every year.</td></tr>
+          <tr><td>Past Simple</td><td class="form">was/were + past participle</td><td>It <em>was built</em> in 1905.</td></tr>
+          <tr><td>Present Continuous</td><td class="form">is being + past participle</td><td>It <em>is being built</em> now.</td></tr>
+          <tr><td>Present Perfect</td><td class="form">has/have been + past participle</td><td>It <em>has been announced</em>.</td></tr>
+        </table>
+      </div>
+      <div class="rule-box">
+        <h3>Past Tenses</h3>
+        <table class="eg-table">
+          <tr><th>Tense</th><th>Use</th><th>Example</th></tr>
+          <tr><td>Past Simple</td><td>completed action at a specific time</td><td>She <em>left</em> at 8am.</td></tr>
+          <tr><td>Past Continuous</td><td>action in progress at a past moment</td><td>He <em>was reading</em> when I called.</td></tr>
+          <tr><td>Past Perfect</td><td>action completed before another past action</td><td>She <em>had already left</em> when I arrived.</td></tr>
+        </table>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-card wrong-card"><h4 class="w">✗ Common Errors</h4><p>His death <strong>is come</strong>.<br>Bill <strong>not include</strong> tips.<br><strong>If they are agree</strong>...<br>Smoking in the <strong>outside</strong>.</p></div>
+        <div class="compare-card right-card"><h4 class="r">✓ Corrections</h4><p>His death <strong>came</strong>.<br>Bill <strong>does not include</strong> tips.<br><strong>If they agree</strong>...<br>Smoking in the <strong>outdoor</strong>.</p></div>
+      </div>
+    </div>
+    <div class="ex-nav"><span></span><button class="nav-btn" onclick="nextEx()">Start Exercises →</button></div>
+  </div>`;
+}
+
+function introPron(){
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Pronunciation Guide</div>
+    <div class="ex-heading">Stress & Tricky Sounds</div>
+    <div class="ex-instruction">Learn the correct stress and pronunciation before doing the exercises. The marked syllable in CAPITALS is stressed.</div>
+    <div class="intro-page">
+      <div class="rule-box" style="margin-bottom:16px">
+        <h3>What is word stress?</h3>
+        <p>In English, one syllable in each word is pronounced <strong>louder, longer, and higher</strong>. Getting stress wrong can make a word hard to understand — even if the sounds are correct.</p>
+        <div class="stress-demo"><span class="stressed">COT</span>·tage &nbsp; ma·<span class="stressed">TURE</span> &nbsp; <span class="stressed">FOR</span>·eign</div>
+      </div>
+      <div class="ipa-card"><div class="ipa-word">cottage</div><div class="ipa-pron">/ˈkɒt.ɪdʒ/</div><div><div class="ipa-stress">Stress: COT·tage</div><div class="ipa-note">Short 'o' sound. The -age ending is /ɪdʒ/, not /age/.</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">mature</div><div class="ipa-pron">/məˈtjʊər/</div><div><div class="ipa-stress">Stress: ma·TURE</div><div class="ipa-note">Stress on second syllable. The 'a' is a schwa /ə/ — very short and weak.</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">foreign</div><div class="ipa-pron">/ˈfɒr.ɪn/</div><div><div class="ipa-stress">Stress: FOR·eign</div><div class="ipa-note">The 'g' is completely silent. Say "FOR-in", not "FOR-ign".</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">Alzheimer</div><div class="ipa-pron">/ˈælts.haɪ.mər/</div><div><div class="ipa-stress">Stress: ALT·zhei·mer</div><div class="ipa-note">Starts with /ælts/ (like "alts"). German origin — the 'z' sounds like /ts/.</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">wind</div><div class="ipa-pron">/wɪnd/ or /waɪnd/</div><div><div class="ipa-stress">Two different words!</div><div class="ipa-note"><strong>wind</strong> (noun, moving air) = /wɪnd/ (short i)<br><strong>wind</strong> (verb, to twist) = /waɪnd/ (long i, rhymes with "find")</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">standard</div><div class="ipa-pron">/ˈstæn.dərd/</div><div><div class="ipa-stress">Stress: STAN·dard</div><div class="ipa-note">Short 'a' — /stæn/, not /staan/. Second syllable is a schwa.</div></div></div>
+      <div class="ipa-card"><div class="ipa-word">constantly</div><div class="ipa-pron">/ˈkɒn.stənt.li/</div><div><div class="ipa-stress">Stress: CON·stant·ly</div><div class="ipa-note">Three syllables. Stress always on the first syllable of adverbs ending in -ly.</div></div></div>
+    </div>
+    <div class="ex-nav"><span></span><button class="nav-btn" onclick="nextEx()">Start Exercises →</button></div>
+  </div>`;
+}
+
+function introPhrasal(pairs, title){
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Reference Page</div>
+    <div class="ex-heading">${title}</div>
+    <div class="ex-instruction">Study these phrasal verbs before starting the exercises. Note the particle carefully — it changes the meaning completely.</div>
+    <div class="intro-page" style="padding:20px 24px">
+      <div class="phrasal-ref-grid">
+        ${pairs.map(p=>`<div class="phrasal-ref-card">
+          <div class="verb">${p[0]}</div>
+          <div class="def">${p[1]}</div>
+          <div class="eg">"${p[2]}"</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="ex-nav"><span></span><button class="nav-btn" onclick="nextEx()">Start Exercises →</button></div>
+  </div>`;
+}
+
+function introPrepositions(){
+  return `<div class="exercise-block active">
+    <div class="ex-number">Lesson — Reference Page</div>
+    <div class="ex-heading">Prepositions & Collocations</div>
+    <div class="ex-instruction">These prepositions must be memorised — they don't always follow logic. Study them carefully.</div>
+    <div class="intro-page">
+      <div class="rule-box">
+        <h3>Verb + Preposition</h3>
+        <table class="eg-table">
+          <tr><th>Phrase</th><th>Example</th></tr>
+          <tr><td><strong>responsible for</strong></td><td>She is responsible <em>for</em> the whole team.</td></tr>
+          <tr><td><strong>depend on</strong></td><td>Everything depends <em>on</em> the weather.</td></tr>
+          <tr><td><strong>point at</strong></td><td>He pointed <em>at</em> the board.</td></tr>
+          <tr><td><strong>applicable to</strong></td><td>This rule is applicable <em>to</em> all staff.</td></tr>
+          <tr><td><strong>born with</strong></td><td>She was born <em>with</em> a gift for music.</td></tr>
+        </table>
+      </div>
+      <div class="rule-box">
+        <h3>LOOK — four different prepositions, four different meanings</h3>
+        <table class="eg-table">
+          <tr><th>Phrase</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td><strong>look up</strong></td><td>search for information</td><td>Look it <em>up</em> in the dictionary.</td></tr>
+          <tr><td><strong>look at</strong></td><td>direct your eyes toward</td><td>Look <em>at</em> this photo.</td></tr>
+          <tr><td><strong>look for</strong></td><td>search for something/someone</td><td>I'm looking <em>for</em> my keys.</td></tr>
+          <tr><td><strong>look through</strong></td><td>read or examine carefully</td><td>She looked <em>through</em> her notes.</td></tr>
+        </table>
+      </div>
+      <div class="rule-box">
+        <h3>Prepositions of place</h3>
+        <table class="eg-table">
+          <tr><th>Phrase</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td><strong>in front of</strong></td><td>directly before something</td><td>She stood <em>in front of</em> the door.</td></tr>
+          <tr><td><strong>in charge of</strong></td><td>responsible for managing</td><td>He is <em>in charge of</em> the project.</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="ex-nav"><span></span><button class="nav-btn" onclick="nextEx()">Start Exercises →</button></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// DATA — all topics with intro as first exercise
+// ═══════════════════════════════════════
+const categories = [
+  { label:'📚 Vocabulary', topics:[
+    { id:'feelings', icon:'😮', name:'-ED / -ING Adjectives', tag:'vocab', exercises:[
+      { type:'intro-custom', render: introEdIng },
+      { type:'mcq', title:'Choose the correct form',
+        instruction:'Choose -ED (how YOU feel) or -ING (what caused the feeling).',
+        questions:[
+          {text:'The documentary was absolutely _____ .',options:['frightened','frightening'],answer:'frightening'},
+          {text:'She looked completely _____ after the marathon.',options:['exhausted','exhausting'],answer:'exhausted'},
+          {text:'The ending of the film was really _____ .',options:['disappointed','disappointing'],answer:'disappointing'},
+          {text:'He was totally _____ when he heard the news.',options:['astonished','astonishing'],answer:'astonished'},
+          {text:'It was the most _____ match I have ever watched.',options:['excited','exciting'],answer:'exciting'},
+          {text:'I felt quite _____ during the lecture — nothing new was said.',options:['bored','boring'],answer:'bored'},
+          {text:'The magic show was absolutely _____ — nobody expected that ending.',options:['astonished','astonishing'],answer:'astonishing'},
+          {text:'She was deeply _____ with her exam results.',options:['disappointed','disappointing'],answer:'disappointed'},
+          {text:'It was the most _____ experience of his life — he will never forget it.',options:['thrilled','thrilling'],answer:'thrilling'},
+        ]
+      },
+      { type:'error', title:'Error Correction',
+        instruction:'Each sentence has ONE mistake. Type the corrected word.',
+        questions:[
+          {text:'The journey was four hours long and very <strong>exhausted</strong>.',answer:'exhausting'},
+          {text:'He was <strong>exciting</strong> about starting his new job on Monday.',answer:'excited'},
+          {text:'The news was absolutely <strong>astonished</strong> — nobody saw it coming.',answer:'astonishing'},
+          {text:'She felt very <strong>disappointing</strong> when her friend cancelled.',answer:'disappointed'},
+          {text:'The children were <strong>boring</strong> because there was nothing to do.',answer:'bored'},
+          {text:'It was the most <strong>thrilled</strong> experience of my life.',answer:'thrilling'},
+        ]
+      }
+    ]},
+    { id:'personality', icon:'🧠', name:'Personality Adjectives', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'reliable',translation:'надёжный',example:'"She\'s so reliable — she always keeps her promises."'},
+        {word:'generous',translation:'щедрый',example:'"He\'s incredibly generous — he always pays for everyone."'},
+        {word:'cheerful',translation:'жизнерадостный',example:'"She has a cheerful personality that lights up the room."'},
+        {word:'emotionally stable',translation:'эмоционально устойчивый',example:'"Even in a crisis, he remained emotionally stable."'},
+        {word:'greedy',translation:'жадный',example:'"Don\'t be greedy — leave some food for the others."'},
+        {word:'insensitive',translation:'бесчувственный',example:'"That was an insensitive comment — think before you speak."'},
+        {word:'reserved',translation:'сдержанный',example:'"She\'s quite reserved at first, but very warm once you know her."'},
+        {word:'talkative',translation:'разговорчивый',example:'"He\'s so talkative — I couldn\'t get a word in!"'},
+        {word:'strict',translation:'строгий',example:'"Our teacher was very strict about deadlines."'},
+        {word:'tyrannical',translation:'тиранический',example:'"The tyrannical manager made everyone\'s life miserable."'},
+        {word:'reclusive',translation:'замкнутый, отшельнический',example:'"After retiring, he became quite reclusive."'},
+        {word:'responsible',translation:'ответственный',example:'"She\'s the most responsible person on the team."'},
+      ], 'Personality Adjectives — Flashcards') },
+      { type:'match', title:'Match adjective to definition',
+        instruction:'Click a word on the left, then its definition on the right.',
+        pairs:[
+          ['reliable','someone you can always trust and depend on'],
+          ['generous','happy to give money, time, or help to others'],
+          ['cheerful','always happy and positive'],
+          ['greedy','wanting more than you need'],
+          ['insensitive',"doesn't care about other people's feelings"],
+          ['reserved',"quiet and doesn't share feelings easily"],
+          ['talkative','enjoys talking a lot'],
+          ['tyrannical','uses power in a cruel and unfair way'],
+          ['reclusive','avoids other people and lives alone'],
+          ['emotionally stable','calm and in control of emotions'],
+        ]
+      },
+      { type:'mcq', title:'Choose the correct adjective',
+        instruction:'Choose the adjective that best fits each sentence.',
+        questions:[
+          {text:'My grandmother was the most _____ person I knew — she always gave more than she had.',options:['generous','greedy','insensitive','reserved'],answer:'generous'},
+          {text:"He never listens when you're upset. He's so _____ .",options:['insensitive','reserved','talkative','cheerful'],answer:'insensitive'},
+          {text:"She's very _____ — you can never get a word in!",options:['talkative','reserved','reliable','strict'],answer:'talkative'},
+          {text:'Our teacher was very _____ about deadlines — no exceptions, ever.',options:['strict','cheerful','generous','talkative'],answer:'strict'},
+          {text:"He is extremely _____ — if he says he'll do something, he does it.",options:['reliable','tyrannical','greedy','moody'],answer:'reliable'},
+          {text:'The new manager was _____ — he shouted at staff every day.',options:['tyrannical','emotionally stable','cheerful','reliable'],answer:'tyrannical'},
+          {text:'She seemed very _____ at first, but opened up once we got to know her.',options:['reserved','talkative','generous','strict'],answer:'reserved'},
+          {text:'Even in a crisis, she remained completely _____ .',options:['cheerful','emotionally stable','strict','greedy'],answer:'emotionally stable'},
+        ]
+      },
+      { type:'personal', title:'Personalisation Questions',
+        instruction:'Write your own answers in full sentences.',
+        questions:[
+          {text:'Would you describe yourself as more talkative or reserved? Why?'},
+          {text:'Think of someone you know who is very reliable. What makes them reliable?'},
+          {text:'Is it possible to be strict and fair at the same time? Give an example.'},
+          {text:'Do you think it is better to be generous or responsible with money?'},
+        ]
+      }
+    ]},
+    { id:'idioms', icon:'🐱', name:'Idioms & Expressions', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'not see eye to eye',translation:'не сходиться во взглядах',example:'"We don\'t see eye to eye on politics — we always disagree."'},
+        {word:'ups and downs',translation:'взлёты и падения',example:'"Every relationship has its ups and downs."'},
+        {word:'fight like cat and dog',translation:'ссориться как кошка с собакой',example:'"They fight like cat and dog but they love each other."'},
+        {word:'fair enough',translation:'ладно, справедливо',example:'"I can\'t come tonight — I have work." "Fair enough, no problem."'},
+        {word:'lose patience',translation:'терять терпение',example:'"I\'m starting to lose patience with this situation."'},
+        {word:"answer someone's prayers",translation:'стать ответом на чьи-то молитвы',example:'"This job offer answered all my prayers."'},
+        {word:'do your bit',translation:'вносить свой вклад',example:'"Everyone needs to do their bit to save the environment."'},
+        {word:'have a good time',translation:'хорошо провести время',example:'"I hope you have a good time at the party!"'},
+        {word:'change your mind',translation:'передумать',example:'"She changed her mind and decided not to sell the house."'},
+        {word:'pay attention',translation:'обращать внимание, слушать внимательно',example:'"Please pay attention — this is important."'},
+        {word:'make sure',translation:'убедиться',example:'"Make sure you lock the door before you leave."'},
+      ], 'Idioms & Expressions — Flashcards') },
+      { type:'match', title:'Match the idiom to its meaning',
+        instruction:'Click the idiom, then its correct meaning.',
+        pairs:[
+          ['not see eye to eye','disagree about something'],
+          ['ups and downs','a mixture of good and bad times'],
+          ['fight like cat and dog','argue constantly and intensely'],
+          ['fair enough','that seems reasonable'],
+          ['lose patience','become unable to stay calm any longer'],
+          ["answer someone's prayers",'to be exactly what someone needed'],
+          ['do your bit','to do your share of work or responsibility'],
+          ['have a good time','to enjoy yourself'],
+          ['change your mind','to decide differently from before'],
+          ['pay attention','to listen or watch carefully'],
+          ['make sure','to check that something is definitely done'],
+        ]
+      },
+      { type:'gapfill', title:'Fill in the blank',
+        instruction:'Click a phrase from the bank, then click the gap to place it.',
+        wordBank:['ups and downs','fought like cat and dog',"don't see eye to eye",'fair enough','pay attention','make sure','do your bit','have a good time','change my mind','lose patience'],
+        questions:[
+          {text:'Every relationship has its _____ — nobody is happy all the time.',answer:'ups and downs'},
+          {text:"My brother and I _____ when we were teenagers, but we're close now.",answer:'fought like cat and dog'},
+          {text:'They _____ about how to raise their children.',answer:"don't see eye to eye"},
+          {text:'"I can\'t come tonight — I have work early." — "_____ , no problem."',answer:'fair enough'},
+          {text:'Please _____ when the teacher is explaining.',answer:'pay attention'},
+          {text:'_____ you lock the door before you leave.',answer:'make sure'},
+          {text:'Everyone needs to _____ if we want to finish on time.',answer:'do your bit'},
+          {text:'I hope you _____ at the party tonight!',answer:'have a good time'},
+          {text:"I've decided to _____ — I'm not going to sell the house.",answer:'change my mind'},
+        ]
+      }
+    ]},
+    { id:'vocab-context', icon:'📝', name:'Sympathy, Responsibility & More', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'sympathy',translation:'сочувствие',example:'"She showed great sympathy when he told her what had happened."'},
+        {word:'responsibility',translation:'ответственность',example:'"Taking care of younger siblings is a big responsibility."'},
+        {word:'mature',translation:'зрелый, взрослый',example:'"She is very mature for her age."'},
+        {word:'indeed',translation:'действительно, и правда',example:'"Was the film good?" "It was, indeed — one of the best."'},
+        {word:'tidy',translation:'аккуратный / убирать',example:'"Please tidy your room before the guests arrive."'},
+        {word:'untidy',translation:'неаккуратный, беспорядочный',example:'"His desk is always untidy — papers everywhere."'},
+        {word:'tell off',translation:'отчитывать, делать выговор',example:'"The teacher told him off for being late again."'},
+        {word:'stunning',translation:'потрясающий',example:'"The view from the top was absolutely stunning."'},
+        {word:'cozy',translation:'уютный',example:'"They spent the evening in a cozy cottage by the fire."'},
+        {word:'cosmopolitan',translation:'космополитичный',example:'"London is one of the most cosmopolitan cities in the world."'},
+        {word:'well-behaved',translation:'хорошо воспитанный',example:'"The children were very well-behaved during the visit."'},
+        {word:'crowded',translation:'переполненный',example:'"The train was so crowded there was nowhere to sit."'},
+      ], 'Vocabulary in Context — Flashcards') },
+      { type:'gapfill', title:'Gap Fill — Word Bank',
+        instruction:'Click a word from the bank, then click the gap to place it.',
+        wordBank:['untidy','sympathy','fair enough','responsibility','mature','indeed','tidy','tell off'],
+        questions:[
+          {text:"His bedroom is always _____ — clothes on the floor, books everywhere.",answer:'untidy'},
+          {text:'She showed great _____ when her colleague lost his job.',answer:'sympathy'},
+          {text:'"I can\'t come tonight — I have work early." — "_____ , no problem."',answer:'fair enough'},
+          {text:'Taking care of your younger siblings is a big _____ .',answer:'responsibility'},
+          {text:'She is very _____ for her age — she thinks carefully before she speaks.',answer:'mature'},
+          {text:'"Was the film good?" — "It was, _____ — one of the best I\'ve seen."',answer:'indeed'},
+          {text:'Please _____ your room before the guests arrive.',answer:'tidy'},
+          {text:'The teacher had to _____ the students for talking during the exam.',answer:'tell off'},
+        ]
+      },
+      { type:'mcq', title:'Descriptive adjectives in context',
+        instruction:'Choose the adjective that best fits each sentence.',
+        questions:[
+          {text:'The village was very _____ — there was barely room to walk.',options:['cozy','crowded','stunning','mature'],answer:'crowded'},
+          {text:'They stayed in a _____ little cottage with a fireplace.',options:['cozy','cosmopolitan','exhausting','crowded'],answer:'cozy'},
+          {text:'New York is one of the most _____ cities in the world.',options:['mature','cosmopolitan','well-behaved','thrilling'],answer:'cosmopolitan'},
+          {text:'The view from the mountain was absolutely _____ .',options:['stunning','moody','crowded','applicable'],answer:'stunning'},
+          {text:'The children were very _____ during the ceremony — not a sound.',options:['well-behaved','thrilling','reserved','exhausting'],answer:'well-behaved'},
+        ]
+      }
+    ]},
+    { id:'work-vocab', icon:'💼', name:'Work & Jobs Vocabulary', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'incentives',translation:'стимулы, поощрения',example:'"The company offers cash incentives for reaching targets."'},
+        {word:'perks',translation:'привилегии, бонусы',example:'"One of the perks of this job is free gym membership."'},
+        {word:'negotiate',translation:'договариваться, вести переговоры',example:'"She negotiated a higher salary before signing the contract."'},
+        {word:'in charge of',translation:'отвечать за, управлять',example:'"She is in charge of a team of twenty people."'},
+        {word:'annual',translation:'ежегодный',example:'"The company has an annual review every December."'},
+        {word:'remote',translation:'удалённый (о работе)',example:'"She works remotely and can work from anywhere."'},
+        {word:'deserve',translation:'заслуживать',example:'"You work so hard — you deserve a holiday."'},
+        {word:'debt',translation:'долг',example:'"After university, he was in debt and had to work extra hours."'},
+        {word:'earn',translation:'зарабатывать',example:'"How much do nurses earn in your country?"'},
+        {word:'insurance',translation:'страховка',example:'"The job includes health insurance."'},
+        {word:'night shift',translation:'ночная смена',example:'"He works the night shift and sleeps during the day."'},
+        {word:'make up',translation:'придумывать (истории)',example:'"He made up a story about being sick — he was on holiday."'},
+        {word:'average',translation:'средний',example:'"The average salary for a teacher is about €2,000 a month."'},
+        {word:'permanent',translation:'постоянный',example:'"She finally got a permanent job — no more short contracts."'},
+        {word:'temporary',translation:'временный',example:'"It\'s just a temporary position — three months."'},
+      ], 'Work & Jobs — Flashcards') },
+      { type:'match', title:'Match the word to its definition',
+        instruction:'Click a word, then its definition.',
+        pairs:[
+          ['incentives','extra rewards given to motivate employees'],
+          ['perks','extra benefits beyond the basic salary'],
+          ['negotiate','to discuss to reach an agreement'],
+          ['in charge of','responsible for managing something'],
+          ['annual','happening once a year'],
+          ['remote','working from home or away from the office'],
+          ['deserve','to have earned something through your actions'],
+          ['debt','money that you owe to someone'],
+          ['earn','to receive money in exchange for work'],
+          ['insurance','protection against financial loss'],
+        ]
+      },
+      { type:'gapfill', title:'Fill in the blank — Work vocabulary',
+        instruction:'Click a word, then place it in the correct gap.',
+        wordBank:['remote','benefits','negotiate','in charge of','annual','earn','debt','deserve','perks','incentives'],
+        questions:[
+          {text:'She works _____ , so she can do her job from anywhere in the world.',answer:'remote'},
+          {text:'The job comes with great _____ , including health insurance and a pension.',answer:'benefits'},
+          {text:'He tried to _____ a higher salary before signing the contract.',answer:'negotiate'},
+          {text:'As a manager, she is _____ a team of twenty people.',answer:'in charge of'},
+          {text:'The company has an _____ review of all employees every December.',answer:'annual'},
+          {text:'She works very hard and she _____ a promotion.',answer:'deserve'},
+          {text:'After university, he was in _____ and had to work extra hours.',answer:'debt'},
+          {text:'The sales team receives _____ when they meet their monthly targets.',answer:'incentives'},
+          {text:'One of the _____ of this job is free gym membership.',answer:'perks'},
+          {text:'How much do nurses _____ in your country?',answer:'earn'},
+        ]
+      },
+      { type:'mcq', title:'Work vocabulary in context',
+        instruction:'Choose the best option.',
+        questions:[
+          {text:'He works the _____ and sleeps during the day.',options:['night shift','day shift','annual leave','remote work'],answer:'night shift'},
+          {text:'The company offers good working _____ , including flexible hours.',options:['conditions','debt','sequence','percentage'],answer:'conditions'},
+          {text:'She wanted to _____ the opportunity to study abroad.',options:['take advantage of','point at','make up','hand in'],answer:'take advantage of'},
+          {text:'The _____ salary for a teacher is about €2,000 a month.',options:['annual','average','permanent','remote'],answer:'average'},
+          {text:'He had to _____ stories about being sick — he was on holiday.',options:['make up','earn','deserve','negotiate'],answer:'make up'},
+          {text:'The job is _____ — there is no contract end date.',options:['permanent','temporary','part-time','remote'],answer:'permanent'},
+          {text:'She was hired on a _____ contract for just three months.',options:['temporary','permanent','annual','full-time'],answer:'temporary'},
+        ]
+      }
+    ]},
+    { id:'hobbies-objects', icon:'🧵', name:'Hobbies, Tools & Equipment', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'knitting',translation:'вязание (спицами)',example:'"She loves knitting — she made a beautiful jumper last winter."'},
+        {word:'sewing',translation:'шитьё',example:'"She learned sewing from her grandmother."'},
+        {word:'DIY',translation:'сделай сам (домашний ремонт)',example:'"He does all his own repairs — he loves DIY."'},
+        {word:'sailing',translation:'парусный спорт / плавание под парусом',example:'"They spent the weekend sailing along the coast."'},
+        {word:'needle',translation:'игла, иголка',example:'"You need a needle and thread to stitch the fabric."'},
+        {word:'thread',translation:'нитка',example:'"She threaded the needle carefully before sewing."'},
+        {word:'screwdriver',translation:'отвёртка',example:'"Use a screwdriver to tighten the screws on the shelf."'},
+        {word:'saddle',translation:'седло',example:'"The saddle on her bicycle was too high."'},
+        {word:'helmet',translation:'шлем',example:'"You must wear a helmet when riding a bike."'},
+        {word:'wet suit',translation:'гидрокостюм',example:'"You\'ll need a wet suit for diving in cold water."'},
+        {word:'striped',translation:'полосатый',example:'"He wore a striped shirt to the interview."'},
+        {word:'meal',translation:'приём пищи, еда',example:'"She prepares three meals a day for the family."'},
+      ], 'Hobbies, Tools & Equipment — Flashcards') },
+      { type:'match', title:'Match the object to its activity',
+        instruction:'Click the item on the left, then its correct category on the right.',
+        pairs:[
+          ['needle','sewing'],
+          ['thread','sewing'],
+          ['screwdriver','DIY'],
+          ['saddle','cycling'],
+          ['helmet','cycling / safety'],
+          ['wet suit','water sports'],
+          ['knitting','wool craft hobby'],
+          ['sailing','water sport'],
+        ]
+      },
+      { type:'gapfill', title:'Fill in the blank',
+        instruction:'Click a word, then place it in the correct gap.',
+        wordBank:['DIY','sailing','knitting','needle','thread','screwdriver','wet suit','saddle','helmet','sewing'],
+        questions:[
+          {text:'She loves _____ — she made a beautiful jumper last winter.',answer:'knitting'},
+          {text:'You need a _____ and thread to stitch the fabric together.',answer:'needle'},
+          {text:'He does all his own home repairs — he loves _____ .',answer:'DIY'},
+          {text:'You must wear a _____ when riding a bike for safety.',answer:'helmet'},
+          {text:'Use a _____ to tighten the screws on the shelf.',answer:'screwdriver'},
+          {text:'The _____ on her bicycle was too high and uncomfortable.',answer:'saddle'},
+          {text:'If you go diving in cold water, you will need a _____ .',answer:'wet suit'},
+          {text:'They spent the weekend _____ along the coast.',answer:'sailing'},
+        ]
+      }
+    ]},
+    { id:'social-formal', icon:'🗣️', name:'Social & Formal Language', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'obligatory',translation:'обязательный',example:'"It is obligatory to wear a seatbelt — it\'s the law."'},
+        {word:'queue',translation:'очередь',example:'"Please form an orderly queue — we will help you one by one."'},
+        {word:'permanent',translation:'постоянный, долгосрочный',example:'"She finally got a permanent job after years of temporary work."'},
+        {word:'temporary',translation:'временный',example:'"The position is temporary — just three months."'},
+        {word:'complain',translation:'жаловаться',example:'"Customers have the right to complain if they are unhappy."'},
+        {word:'moan',translation:'ныть, постоянно жаловаться',example:'"She always moans about the weather — nothing is ever right."'},
+        {word:'literal',translation:'буквальный',example:'"He took the joke too literally — it wasn\'t meant seriously."'},
+        {word:'accept',translation:'принимать, соглашаться',example:'"She accepted the job offer without hesitation."'},
+        {word:'discuss',translation:'обсуждать',example:'"We need to discuss this before making a final decision."'},
+        {word:'none of your business',translation:'не твоё дело',example:'"How much do I earn? None of your business!"'},
+        {word:'pay attention',translation:'обращать внимание',example:'"Please pay attention — this will be on the exam."'},
+        {word:'further',translation:'дальше, кроме того',example:'"For further information, please contact the office."'},
+      ], 'Social & Formal Language — Flashcards') },
+      { type:'match', title:'Match word to meaning',
+        instruction:'Click a word, then its definition.',
+        pairs:[
+          ['obligatory','something you must do — it is required'],
+          ['queue','a line of people waiting for something'],
+          ['permanent','lasting forever or for a very long time'],
+          ['temporary','lasting only for a short time'],
+          ['complain','to express that you are unhappy about something'],
+          ['moan','to complain in a continuous, irritating way'],
+          ['literal','the exact, basic meaning of a word'],
+          ['accept','to agree to receive or take something'],
+          ['discuss','to talk about a topic with other people'],
+          ['further','at a greater distance or to a greater degree'],
+        ]
+      },
+      { type:'mcq', title:'Choose the correct word',
+        instruction:'Choose the word that fits best.',
+        questions:[
+          {text:"It's _____ to wear a seatbelt in a car — it's the law.",options:['obligatory','temporary','literal','further'],answer:'obligatory'},
+          {text:'Please form an orderly _____ — we will help you one by one.',options:['queue','debt','moan','screen'],answer:'queue'},
+          {text:'She tends to _____ about everything — the weather, the food, her neighbours.',options:['moan','accept','queue','discuss'],answer:'moan'},
+          {text:'He took the instruction too _____ — it was meant as a joke.',options:['literal','further','permanent','obligatory'],answer:'literal'},
+          {text:'We need to _____ this matter before making a final decision.',options:['discuss','moan','accept','queue'],answer:'discuss'},
+          {text:'"None of your _____!" she snapped when he asked about her salary.',options:['business','attention','mind','time'],answer:'business'},
+          {text:'Please _____ attention — this information is very important.',options:['pay','give','make','take'],answer:'pay'},
+        ]
+      }
+    ]},
+    { id:'discourse', icon:'🔗', name:'Connectors & Discourse Markers', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'however',translation:'однако, тем не менее',example:'"She studied hard. However, she failed the exam."'},
+        {word:'during',translation:'во время',example:'"During the film, she fell asleep twice."'},
+        {word:'as soon as',translation:'как только',example:'"As soon as he arrived, he asked for a glass of water."'},
+        {word:'as well as',translation:'а также, помимо',example:'"He speaks French as well as German."'},
+        {word:'even though',translation:'несмотря на то что',example:'"Even though the teacher explained it twice, he didn\'t understand."'},
+        {word:'furthermore',translation:'кроме того, более того',example:'"She is reliable and hardworking. Furthermore, she is talented."'},
+        {word:'familiar',translation:'знакомый, известный',example:'"Her face looked familiar — I was sure I had seen her before."'},
+        {word:'inherit',translation:'наследовать',example:'"She is expected to inherit a large sum from her grandmother."'},
+        {word:'pretend',translation:'притворяться',example:'"Children sometimes pretend to be asleep when their parents check."'},
+        {word:'tirelessly',translation:'неустанно, без устали',example:'"She has worked tirelessly for this community for thirty years."'},
+        {word:'remain',translation:'оставаться',example:'"Please remain seated until the plane has stopped."'},
+        {word:'take part in',translation:'принимать участие в',example:'"Everyone is invited to take part in the celebration."'},
+      ], 'Connectors & Key Words — Flashcards') },
+      { type:'mcq', title:'Choose the correct connector',
+        instruction:'Choose the connector that best fits the sentence.',
+        questions:[
+          {text:'She studied hard. _____ , she failed the exam.',options:['However','During','As soon as','Furthermore'],answer:'However'},
+          {text:'_____ the film, she fell asleep twice.',options:['During','However','As soon as','Even'],answer:'During'},
+          {text:'_____ he arrived, he asked for a glass of water.',options:['As soon as','During','However','Further'],answer:'As soon as'},
+          {text:'He speaks French _____ German.',options:['as well as','even','however','during'],answer:'as well as'},
+          {text:'_____ the teacher explained it twice, he still didn\'t understand.',options:['Even though','During','As soon as','Further'],answer:'Even though'},
+          {text:'She is reliable, hardworking, and, _____ , extremely talented.',options:['furthermore','during','as soon as','even'],answer:'furthermore'},
+        ]
+      },
+      { type:'match', title:'Match connector to its function',
+        instruction:'Click the connector, then its function.',
+        pairs:[
+          ['however','to show contrast or contradiction'],
+          ['as soon as','one thing happens immediately after another'],
+          ['during','something happens within a period of time'],
+          ['as well as','to add information — in addition to'],
+          ['even though','to show contrast despite a fact'],
+          ['furthermore','to add a stronger or additional point'],
+        ]
+      }
+    ]},
+    { id:'family-relationships', icon:'👨‍👩‍👧', name:'Family, People & Society', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'familiar',translation:'знакомый',example:'"Her face looked familiar — I was sure I had seen her before."'},
+        {word:'inherit',translation:'наследовать',example:'"She will inherit the house from her grandmother."'},
+        {word:'pretend',translation:'притворяться',example:'"Children often pretend to be asleep when parents check on them."'},
+        {word:'stroller',translation:'детская коляска',example:'"She pushed the stroller through the park on a sunny afternoon."'},
+        {word:'hand in',translation:'сдавать (работу)',example:'"Please hand in your homework by Friday."'},
+        {word:'allow',translation:'разрешать, позволять',example:'"Are you allowed to use your phone in class?"'},
+        {word:'decades',translation:'десятилетия',example:'"The tradition has survived for decades."'},
+        {word:'tirelessly',translation:'неустанно',example:'"She has worked tirelessly for this community for thirty years."'},
+        {word:'remain',translation:'оставаться',example:'"She remained calm despite the chaos around her."'},
+        {word:'take part in',translation:'участвовать в',example:'"Everyone is invited to take part in the end-of-year celebration."'},
+        {word:'plague',translation:'чума, эпидемия',example:'"The Black Death was a terrible plague that killed millions."'},
+        {word:'bury',translation:'хоронить, зарывать',example:'"They buried him in the village churchyard."'},
+        {word:'sequence',translation:'последовательность',example:'"Please tell me the correct sequence of events."'},
+        {word:'situated',translation:'расположенный',example:'"The village is situated in a beautiful valley."'},
+      ], 'Family, Society & History — Flashcards') },
+      { type:'match', title:'Match word to definition',
+        instruction:'Click the word, then its definition.',
+        pairs:[
+          ['familiar','knowing something well because you have seen it before'],
+          ['inherit','to receive money or property from a relative'],
+          ['pretend','to act as if something is true when it is not'],
+          ['stroller','a small vehicle with wheels for pushing a baby'],
+          ['hand in','to give something to a person in authority'],
+          ['allow','to give permission for something to happen'],
+          ['decades','periods of ten years'],
+          ['tirelessly','without getting tired; working very hard'],
+          ['remain','to stay in the same place or condition'],
+          ['take part in','to participate in an activity'],
+        ]
+      },
+      { type:'gapfill', title:'Fill in the blank',
+        instruction:'Click a word, then place it in the gap.',
+        wordBank:['familiar','inherit','pretend','stroller','hand in','allow','decades','tirelessly','remain','take part in'],
+        questions:[
+          {text:'She has worked _____ for this community for over thirty years.',answer:'tirelessly'},
+          {text:'The face looked _____ — I was sure I had seen her before.',answer:'familiar'},
+          {text:'Children sometimes _____ to be asleep when their parents check on them.',answer:'pretend'},
+          {text:'She pushed the _____ through the park on a sunny afternoon.',answer:'stroller'},
+          {text:'Please _____ your homework by Friday at the latest.',answer:'hand in'},
+          {text:'The tradition has survived for _____ despite many changes in society.',answer:'decades'},
+          {text:'She is expected to _____ a large sum of money from her grandmother.',answer:'inherit'},
+          {text:'Everyone is invited to _____ the end-of-year celebration.',answer:'take part in'},
+        ]
+      }
+    ]},
+    { id:'ability-fluency', icon:'🎯', name:'Ability, Fluency & Progress', tag:'vocab', exercises:[
+      { type:'intro-custom', render: ()=>flashcards([
+        {word:'ability',translation:'способность, умение',example:'"She has an extraordinary ability to remember faces."'},
+        {word:'fluency',translation:'беглость (речи)',example:'"Her fluency in French improved after she moved to Paris."'},
+        {word:'percentage',translation:'процент',example:'"Only a small percentage of students failed the exam."'},
+        {word:'gradually',translation:'постепенно',example:'"Her confidence gradually improved over the year."'},
+        {word:'maintain',translation:'поддерживать, сохранять',example:'"It is important to maintain a healthy routine."'},
+        {word:'devote',translation:'посвящать',example:'"She devotes most of her weekends to painting."'},
+        {word:'applicable',translation:'применимый, относящийся к делу',example:'"This rule is only applicable to employees hired after 2022."'},
+        {word:'chores',translation:'домашние дела',example:'"My mother always made us finish our chores before watching TV."'},
+        {word:'pour',translation:'наливать',example:'"She poured the juice carefully into the glass."'},
+        {word:'sand',translation:'зачищать наждачной бумагой',example:'"Before painting the wood, you need to sand the surface."'},
+        {word:'continue',translation:'продолжать',example:'"Please continue — I\'m listening."'},
+        {word:'pick up',translation:'подхватывать (язык)',example:'"She picked up Spanish just by living in Madrid."'},
+      ], 'Ability, Fluency & Progress — Flashcards') },
+      { type:'match', title:'Match word to definition',
+        instruction:'Click a word, then its definition.',
+        pairs:[
+          ['ability','the skill or power to do something'],
+          ['fluency','the ability to speak a language easily'],
+          ['percentage','a number expressed as a part of 100'],
+          ['gradually','slowly and steadily, step by step'],
+          ['maintain','to keep something in its current state'],
+          ['devote','to give time or energy to something'],
+          ['applicable','relevant and able to be used in a particular situation'],
+          ['chores','routine household tasks'],
+          ['pour','to cause liquid to flow from a container'],
+          ['sand','to smooth a surface by rubbing it'],
+        ]
+      },
+      { type:'mcq', title:'Choose the correct word',
+        instruction:'Choose the best word for each sentence.',
+        questions:[
+          {text:'Her _____ in French improved significantly after she moved to Paris.',options:['fluency','ability','percentage','sequence'],answer:'fluency'},
+          {text:'Only a small _____ of students failed the exam.',options:['percentage','fluency','ability','sequence'],answer:'percentage'},
+          {text:'He has an extraordinary _____ to remember faces.',options:['ability','fluency','percentage','condition'],answer:'ability'},
+          {text:'She _____ most of her weekends to painting.',options:['devotes','maintains','continues','pours'],answer:'devotes'},
+          {text:'The new rule is only _____ to employees hired after 2022.',options:['applicable','reliable','permanent','annual'],answer:'applicable'},
+          {text:'It is important to _____ a healthy routine even when you are busy.',options:['maintain','devote','continue','pick up'],answer:'maintain'},
+          {text:'Before painting the wood, you need to _____ the surface until it is smooth.',options:['sand','pour','pick up','maintain'],answer:'sand'},
+        ]
+      }
+    ]},
+  ]},
+  { label:'🔄 Phrasal Verbs', topics:[
+    { id:'phrasal-main', icon:'🔄', name:'Core Phrasal Verbs', tag:'phrasal', exercises:[
+      { type:'intro-custom', render: ()=>introPhrasal([
+        ['pick up','to learn informally, without formal study','"She picked up Spanish just by living in Madrid."'],
+        ['give up','to stop trying; to abandon something','"Don\'t give up — you\'re so close to finishing."'],
+        ['bring up','(1) to raise a child; (2) to mention a topic','"He brought up an interesting point in the meeting."'],
+        ['look up','to search for information','"Look up the word in the dictionary if you don\'t know it."'],
+        ['die out','to gradually disappear or become extinct','"The tradition has died out in many cultures."'],
+        ['try on','to put on clothing to check the fit','"She tried on three dresses before choosing one."'],
+        ['keep an eye on','to watch over something temporarily','"Could you keep an eye on my bag while I\'m gone?"'],
+        ['maintain','to keep something in its current state','"It\'s important to maintain a healthy routine."'],
+        ['devote','to give time or energy to something','"She devotes most of her weekends to painting."'],
+        ['pick up','to collect someone or something','"Can you pick up the kids from school?"'],
+        ['pour','to cause liquid to flow','"Pour the tea carefully — it\'s very hot."'],
+        ['continue','to keep doing without stopping','"Please continue — I\'m listening."'],
+      ], 'Core Phrasal Verbs — Reference') },
+      { type:'mcq', title:'Meaning in Context',
+        instruction:'Choose the correct meaning of the underlined phrasal verb.',
+        questions:[
+          {text:'She <strong>picked up</strong> Spanish while living in Madrid.',options:['bought a textbook','learned informally','spoke badly','forgot quickly'],answer:'learned informally'},
+          {text:'He <strong>brought up</strong> an interesting point in the meeting.',options:['carried something upstairs','introduced a topic','left the room','agreed with everyone'],answer:'introduced a topic'},
+          {text:"Don't <strong>give up</strong> — you only need a few more points.",options:['hand something over','stop trying','take a break','ask for help'],answer:'stop trying'},
+          {text:'She <strong>looked up</strong> the word in the dictionary.',options:['admired someone','searched for information','wrote a letter','forgot the word'],answer:'searched for information'},
+          {text:'The tradition has <strong>died out</strong> in many cultures.',options:['caught fire','gradually disappeared','become popular','changed completely'],answer:'gradually disappeared'},
+          {text:'She was <strong>brought up</strong> by her grandparents.',options:['introduced to someone','raised as a child','mentioned in a story','carried somewhere'],answer:'raised as a child'},
+          {text:'She wants to <strong>try on</strong> the dress before buying it.',options:['throw it away','wear it to check the fit','wash it','return it'],answer:'wear it to check the fit'},
+          {text:"Could you <strong>keep an eye on</strong> my bag?",options:['stare at it','watch over it temporarily','carry it','put it somewhere'],answer:'watch over it temporarily'},
+        ]
+      },
+      { type:'oddout', title:'Odd One Out',
+        instruction:'Three words are synonyms or closely related. Click the one that does NOT belong.',
+        questions:[
+          {words:['steadily','incrementally','abruptly','progressively'],odd:'abruptly',context:'gradually'},
+          {words:['preserve','neglect','sustain','uphold'],odd:'neglect',context:'maintain'},
+          {words:['persist','quit','surrender','abandon'],odd:'persist',context:'give up'},
+          {words:['dedicate','commit','ignore','allocate'],odd:'ignore',context:'devote'},
+          {words:['flourished','vanished','disappeared','faded away'],odd:'flourished',context:'died out'},
+          {words:['irrelevant','suitable','pertinent','appropriate'],odd:'irrelevant',context:'applicable'},
+          {words:['leisure','errands','duties','housework'],odd:'leisure',context:'chores'},
+        ]
+      },
+      { type:'error', title:'Correct the Particle / Preposition',
+        instruction:'Each sentence has a wrong particle. Type the correct one.',
+        questions:[
+          {text:'She decided to give <strong>in</strong> learning French after failing three times.',answer:'up'},
+          {text:'He was brought <strong>out</strong> in a village with no electricity.',answer:'up'},
+          {text:'Please look <strong>into</strong> the word in the dictionary.',answer:'up'},
+          {text:'Could you keep an eye <strong>at</strong> the children while I cook?',answer:'on'},
+          {text:'She picked <strong>out</strong> a new language just by watching TV shows.',answer:'up'},
+          {text:'He brought <strong>over</strong> the issue of working hours at the meeting.',answer:'up'},
+        ]
+      }
+    ]},
+    { id:'phrasal-new', icon:'🤝', name:'New Phrasal Verbs', tag:'phrasal', exercises:[
+      { type:'intro-custom', render: ()=>introPhrasal([
+        ['run into','to meet someone by accident','"I ran into my old teacher at the supermarket."'],
+        ['hang out','to spend time relaxing with someone','"We used to hang out at the park every evening."'],
+        ['call back','to return a phone call','"Sorry I missed your call — I\'ll call you back in an hour."'],
+        ['show up','to appear or arrive somewhere','"Nobody showed up to the meeting — the room was empty."'],
+        ['fall out','to have an argument and stop being friendly','"They fell out badly last year and haven\'t spoken since."'],
+        ['give back','to return something to its owner','"Can I borrow your pen? I\'ll give it back after class."'],
+        ['cut down on','to reduce the amount of something','"The doctor told him to cut down on sugar."'],
+        ['cheer up','to become or make someone happier','"She was upset, so her friends tried to cheer her up."'],
+      ], 'New Phrasal Verbs — Reference') },
+      { type:'match', title:'Match phrasal verb to meaning',
+        instruction:'Click the phrasal verb, then its correct definition.',
+        pairs:[
+          ['run into','to meet someone by accident'],
+          ['hang out','to spend time relaxing with someone'],
+          ['call back','to return a phone call'],
+          ['show up','to appear or arrive somewhere'],
+          ['fall out','to have an argument and stop being friendly'],
+          ['give back','to return something to its owner'],
+          ['cut down on','to reduce the amount of something'],
+          ['cheer up','to become happier'],
+        ]
+      },
+      { type:'gapfill', title:'Fill in the blank',
+        instruction:'Click a word, then the gap to place it.',
+        wordBank:['ran into','cheer up','cut down on','showed up','give back','fell out','call back','hang out'],
+        questions:[
+          {text:'He _____ an old school friend at the supermarket yesterday.',answer:'ran into'},
+          {text:'She was upset, so her friends tried to _____ her.',answer:'cheer up'},
+          {text:'The doctor told him to _____ sugar and fatty food.',answer:'cut down on'},
+          {text:'Nobody _____ to the meeting — the room was completely empty.',answer:'showed up'},
+          {text:"Can I borrow your pen? I'll _____ it after class.",answer:'give back'},
+          {text:"They _____ badly last year and haven't spoken since.",answer:'fell out'},
+          {text:"Sorry I missed your call — I'll _____ you in an hour.",answer:'call back'},
+          {text:'We used to _____ at the park every evening after school.',answer:'hang out'},
+        ]
+      },
+      { type:'error', title:'Error Correction — Phrasal Verbs',
+        instruction:'Each sentence has ONE mistake. Type the correct particle.',
+        questions:[
+          {text:'She ran <strong>onto</strong> her old teacher at the bus stop.',answer:'into'},
+          {text:'He gave <strong>over</strong> the money he had borrowed.',answer:'back'},
+          {text:'They fell <strong>off</strong> over a small disagreement about money.',answer:'out'},
+          {text:'Nobody showed <strong>on</strong> to the job interview.',answer:'up'},
+          {text:'You really need to cut down <strong>of</strong> junk food.',answer:'on'},
+          {text:"Don't worry, cheer <strong>on</strong> — everything will be fine.",answer:'up'},
+          {text:"Sorry I missed your call — I'll call you <strong>over</strong> later.",answer:'back'},
+        ]
+      }
+    ]},
+    { id:'prepositions', icon:'➡️', name:'Prepositions & Collocations', tag:'phrasal', exercises:[
+      { type:'intro-custom', render: introPrepositions },
+      { type:'mcq', title:'Choose the correct preposition',
+        instruction:'Choose the correct preposition to complete each phrase.',
+        questions:[
+          {text:'She is responsible _____ managing the whole department.',options:['for','of','to','about'],answer:'for'},
+          {text:'Everything depends _____ the weather — if it rains, we stay home.',options:['on','of','for','to'],answer:'on'},
+          {text:'She pointed _____ the mistake in the report.',options:['at','on','for','to'],answer:'at'},
+          {text:'He looked _____ his notes before the exam.',options:['through','up','at','for'],answer:'through'},
+          {text:'Can you look _____ this word in the dictionary?',options:['up','at','through','for'],answer:'up'},
+          {text:'She was looking _____ her glasses everywhere.',options:['for','at','up','through'],answer:'for'},
+          {text:'He looked _____ the painting with great admiration.',options:['at','for','up','through'],answer:'at'},
+          {text:'The new policy is only applicable _____ staff hired after 2020.',options:['to','for','of','with'],answer:'to'},
+          {text:'She stood _____ the door and waited for him.',options:['in front of','in charge of','in spite of','in spite of'],answer:'in front of'},
+          {text:'He was born _____ a natural gift for music.',options:['with','from','by','of'],answer:'with'},
+        ]
+      }
+    ]}
+  ]},
+  { label:'✏️ Grammar', topics:[
+    { id:'grammar-errors', icon:'⚠️', name:'Common Grammar Mistakes', tag:'grammar', exercises:[
+      { type:'intro-custom', render: introGrammar },
+      { type:'error', title:'Correct the mistake',
+        instruction:'Each sentence has ONE grammar mistake. Type the correct word or phrase.',
+        questions:[
+          {text:'I <strong>born</strong> in a small town in the south of Poland.',answer:'was born'},
+          {text:'She is in <strong>the twenties</strong> and already runs her own business.',answer:'her twenties'},
+          {text:'He loves <strong>see</strong> his friends at the weekend.',answer:'seeing'},
+          {text:'It takes me about thirty minutes <strong>arriving</strong> at work.',answer:'to arrive'},
+          {text:'She was very <strong>sympathy</strong> when I told her what had happened.',answer:'sympathetic'},
+          {text:'He told off <strong>to</strong> his son for breaking the window.',answer:'(remove "to")'},
+          {text:'Fair enough, but I still <strong>no</strong> agree with your decision.',answer:"don't"},
+          {text:'He was used to <strong>listen</strong> to loud music — it didn\'t bother him.',answer:'listening'},
+          {text:'<strong>His death is come</strong> as a great shock to everyone.',answer:'His death came'},
+          {text:'The bill <strong>not include</strong> tips — please add 10% if you wish.',answer:'does not include'},
+          {text:'<strong>If these sausages for guests</strong> , we need to keep them fresh.',answer:'If these sausages are for guests'},
+          {text:'<strong>Smoking in the outside</strong> area is permitted until 10pm.',answer:'Smoking in the outdoor'},
+          {text:"I don't want to my son <strong>breathe</strong> in all that smoke.",answer:"I don't want my son to breathe"},
+          {text:'<strong>If they are agree</strong> , we can start the project next week.',answer:'If they agree'},
+        ]
+      },
+      { type:'mcq', title:'Used to / Get used to / Be used to',
+        instruction:'Choose the correct form for each sentence.',
+        questions:[
+          {text:'When I was a child, I _____ walk to school every day.',options:['used to','am used to','get used to','was used to'],answer:'used to'},
+          {text:"It's hard at first, but you'll _____ the new schedule.",options:['get used to','used to','be used to','have used to'],answer:'get used to'},
+          {text:"She _____ working night shifts now — it doesn't bother her anymore.",options:['is used to','used to','gets used to','was used to'],answer:'is used to'},
+          {text:'He _____ smoke, but he quit five years ago.',options:['used to','is used to','gets used to','was used to'],answer:'used to'},
+          {text:"They _____ the cold weather — they've lived here for years.",options:['are used to','used to','get used to','were used to'],answer:'are used to'},
+        ]
+      },
+      { type:'mcq', title:'Passive Voice',
+        instruction:'Choose the correct passive form.',
+        questions:[
+          {text:'The report _____ every year by the management team.',options:['is reviewed','reviews','reviewing','was reviewing'],answer:'is reviewed'},
+          {text:'The letter _____ yesterday morning.',options:['was sent','is sent','sent','has sent'],answer:'was sent'},
+          {text:'The building _____ in 1905.',options:['was built','is built','built','has been built'],answer:'was built'},
+          {text:'A new hospital _____ in the city centre at the moment.',options:['is being built','was built','has been built','is built'],answer:'is being built'},
+          {text:'The results have already _____ by the committee.',options:['been announced','being announced','announced','announce'],answer:'been announced'},
+        ]
+      },
+      { type:'mcq', title:'Past Simple / Past Perfect / Past Continuous',
+        instruction:'Choose the correct tense.',
+        questions:[
+          {text:'When I arrived, she _____ already left.',options:['had','was','has','did'],answer:'had'},
+          {text:'He _____ a book when the phone rang.',options:['was reading','had read','read','has read'],answer:'was reading'},
+          {text:'By the time we got there, the film _____ .',options:['had started','was starting','started','has started'],answer:'had started'},
+          {text:'She _____ in London for ten years before she moved to Paris.',options:['had lived','was living','lived','has lived'],answer:'had lived'},
+          {text:'I _____ dinner when I suddenly remembered the meeting.',options:['was making','had made','made','have made'],answer:'was making'},
+        ]
+      }
+    ]}
+  ]},
+  { label:'🔊 Pronunciation', topics:[
+    { id:'pronunciation', icon:'🗣️', name:'Stress & Tricky Sounds', tag:'pron', exercises:[
+      { type:'intro-custom', render: introPron },
+      { type:'pron-stress', title:'Word Stress — Click the stressed syllable',
+        instruction:'The first word is done as an example. For the rest, click the stressed syllable.',
+        words:[
+          {word:'COT-tage', stressed:0, syllables:['COT','tage'], note:"'cottage' — stress on the FIRST syllable. /ˈkɒt.ɪdʒ/"},
+          {word:'mature', stressed:1, syllables:['ma','TURE'], note:"'mature' — stress on the SECOND syllable. /məˈtjʊər/"},
+          {word:'foreign', stressed:0, syllables:['FOR','eign'], note:"'foreign' — the 'g' is SILENT. /ˈfɒr.ɪn/"},
+          {word:'Alzheimer', stressed:0, syllables:['ALT','zhei','mer'], note:"'Alzheimer' — starts like /ælts/. /ˈælts.haɪ.mər/"},
+          {word:'standard', stressed:0, syllables:['STAN','dard'], note:"'standard' — stress on FIRST syllable. /ˈstæn.dərd/"},
+          {word:'constantly', stressed:0, syllables:['CON','stant','ly'], note:"'constantly' — stress on FIRST syllable. /ˈkɒn.stənt.li/"},
+        ]
+      },
+      { type:'mcq', title:'Tricky pronunciations',
+        instruction:'Choose the correct pronunciation or stress pattern.',
+        questions:[
+          {text:"'Foreign' — which syllable is stressed?",options:['FOR-eign','for-EIGN'],answer:'FOR-eign'},
+          {text:"'Mature' — which syllable is stressed?",options:['MA-ture','ma-TURE'],answer:'ma-TURE'},
+          {text:"'Constantly' — which syllable is stressed?",options:['CON-stant-ly','con-STANT-ly','con-stant-LY'],answer:'CON-stant-ly'},
+          {text:"'Standard' — which syllable is stressed?",options:['STAN-dard','stan-DARD'],answer:'STAN-dard'},
+          {text:"'Cottage' — which syllable is stressed?",options:['COT-tage','cot-TAGE'],answer:'COT-tage'},
+          {text:"'Wind' meaning 'the wind is blowing' — how is it pronounced?",options:['/wɪnd/ — short i','/waɪnd/ — long i'],answer:'/wɪnd/ — short i'},
+          {text:"'Wind' meaning 'to wind a clock' — how is it pronounced?",options:['/wɪnd/ — short i','/waɪnd/ — long i'],answer:'/waɪnd/ — long i'},
+          {text:"'Alzheimer' — how does the first part sound?",options:["Like 'Al' as in 'all'",'Like A-L-T-S'],answer:'Like A-L-T-S'},
+        ]
+      }
+    ]}
+  ]}
+];
+
+// ═══════════════════════════════════════
+// FLASHCARD ENGINE
+// ═══════════════════════════════════════
+window._fc = {};
+function fcFlip(id){
+  document.getElementById(id+'-inner').classList.toggle('flipped');
+  const s=window._fc[id];
+  s.seen.add(s.idx);
+  updateFcDots(id);
+}
+function fcNext(id){
+  const s=window._fc[id];
+  document.getElementById(id+'-inner').classList.remove('flipped');
+  s.idx=(s.idx+1)%s.words.length;
+  fcUpdate(id);
+}
+function fcPrev(id){
+  const s=window._fc[id];
+  document.getElementById(id+'-inner').classList.remove('flipped');
+  s.idx=(s.idx-1+s.words.length)%s.words.length;
+  fcUpdate(id);
+}
+function fcUpdate(id){
+  const s=window._fc[id];
+  const w=s.words[s.idx];
+  document.getElementById(id+'-word').textContent=w.word;
+  document.getElementById(id+'-trans').textContent=w.translation;
+  document.getElementById(id+'-ex').textContent=w.example;
+  document.getElementById(id+'-counter').textContent=`Card ${s.idx+1} of ${s.words.length}`;
+  updateFcDots(id);
+}
+function fcShuffle(id){
+  const s=window._fc[id];
+  s.words.sort(()=>Math.random()-.5);
+  s.idx=0; s.seen=new Set();
+  document.getElementById(id+'-inner').classList.remove('flipped');
+  fcUpdate(id);
+}
+function fcReset(id){
+  const s=window._fc[id];
+  s.idx=0; s.seen=new Set();
+  document.getElementById(id+'-inner').classList.remove('flipped');
+  fcUpdate(id);
+  // rebuild dots
+  const dotsEl=document.getElementById(id+'-dots');
+  if(dotsEl) dotsEl.innerHTML=s.words.map((_,i)=>`<div class="fc-dot" id="${id}-dot-${i}"></div>`).join('');
+}
+function updateFcDots(id){
+  const s=window._fc[id];
+  s.words.forEach((_,i)=>{
+    const d=document.getElementById(`${id}-dot-${i}`);
+    if(!d) return;
+    d.className='fc-dot'+(i===s.idx?' active':s.seen.has(i)?' seen':'');
+  });
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let mode='practice', currentTopic=null, currentExIdx=0;
+let score=0, totalQ=0, answered=0;
+let timerInterval=null, timeLeft=0, currentExamMode=false;
+let matchLeftWord=null, matchLeftIdx=null;
+let selectedWord=null, gapAnswers={};
+
+// ═══════════════════════════════════════
+// SCREEN
+// ═══════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='topic-select') renderTopics();
+  if(timerInterval&&id!=='exercise-screen'){clearInterval(timerInterval);timerInterval=null;}
+}
+function startMode(m){mode=m;showScreen('topic-select');}
+
+function renderTopics(){
+  const c=document.getElementById('topicsContainer');
+  c.innerHTML=categories.map(cat=>`
+    <div class="category-label">${cat.label}</div>
+    <div class="topics-grid">
+      ${cat.topics.map(t=>`
+        <div class="topic-card" onclick="startTopic('${t.id}')">
+          <div class="topic-icon">${t.icon}</div>
+          <div class="topic-name">${t.name}</div>
+          <div class="topic-count">${countQ(t)} questions + lesson</div>
+          <span class="topic-tag tag-${t.tag}">${t.tag}</span>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function countQ(t){
+  let n=0;
+  t.exercises.forEach(ex=>{
+    if(ex.type==='intro-custom') return;
+    if(ex.questions) n+=ex.questions.length;
+    else if(ex.pairs) n+=ex.pairs.length;
+    else if(ex.words) n+=ex.words.length-1;
+  });
+  return n;
+}
+
+function findTopic(id){
+  for(const cat of categories) for(const t of cat.topics) if(t.id===id) return t;
+  return null;
+}
+
+function startTopic(id){
+  currentTopic=findTopic(id);
+  currentExIdx=0; score=0; totalQ=countQ(currentTopic); answered=0;
+  gapAnswers={}; matchLeftWord=null; matchLeftIdx=null; selectedWord=null;
+  currentExamMode=(mode==='exam');
+  document.getElementById('examBanner').style.display=currentExamMode?'block':'none';
+  document.getElementById('exHeaderTitle').textContent=currentTopic.name;
+  document.getElementById('timerDisplay').style.display=currentExamMode?'block':'none';
+  if(currentExamMode){timeLeft=Math.max(totalQ*35,600);startTimer();}
+  showScreen('exercise-screen');
+  renderExercise();
+}
+
+function startTimer(){
+  updateTimer();
+  timerInterval=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerInterval);endExercise();}},1000);
+}
+function updateTimer(){
+  const m=Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s=(timeLeft%60).toString().padStart(2,'0');
+  const el=document.getElementById('timerDisplay');
+  el.textContent=`${m}:${s}`;
+  el.className='timer-display'+(timeLeft<60?' urgent':'');
+}
+
+function renderExercise(){
+  const body=document.getElementById('exerciseBody');
+  const ex=currentTopic.exercises[currentExIdx];
+  const total=currentTopic.exercises.length;
+  // progress excludes intro pages
+  const doneEx=currentTopic.exercises.slice(0,currentExIdx).filter(e=>e.type!=='intro-custom').length;
+  document.getElementById('progressFill').style.width=((doneEx/Math.max(total-1,1))*100)+'%';
+  document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  matchLeftWord=null; matchLeftIdx=null; selectedWord=null; gapAnswers={};
+
+  if(ex.type==='intro-custom'){
+    body.innerHTML=ex.render();
+    window.scrollTo(0,0);
+    return;
+  }
+
+  let html=`<div class="exercise-block active">
+    <div class="ex-number">Exercise ${currentExIdx} of ${total-1}</div>
+    <div class="ex-heading">${ex.title}</div>
+    <div class="ex-instruction">${ex.instruction}</div>`;
+  if(ex.type==='mcq') html+=renderMCQ(ex);
+  else if(ex.type==='error') html+=renderError(ex);
+  else if(ex.type==='match') html+=renderMatch(ex);
+  else if(ex.type==='gapfill') html+=renderGapFill(ex);
+  else if(ex.type==='oddout') html+=renderOddOut(ex);
+  else if(ex.type==='personal') html+=renderPersonal(ex);
+  else if(ex.type==='pron-stress') html+=renderPronStress(ex);
+  html+=`<div class="ex-nav">
+    <button class="nav-btn secondary" onclick="prevEx()" ${currentExIdx===0?'disabled':''}>← Previous</button>
+    ${!currentExamMode?`<button class="check-btn" onclick="checkAll()">Check ✓</button>`:''}
+    <button class="nav-btn" onclick="nextEx()">${currentExIdx<total-1?'Next →':'Finish 🎉'}</button>
+  </div></div>`;
+  body.innerHTML=html;
+  window.scrollTo(0,0);
+}
+
+// ─── MCQ ───
+function renderMCQ(ex){
+  return ex.questions.map((q,qi)=>`
+    <div class="q-card" id="qcard-${qi}">
+      <div class="q-text">${qi+1}. ${q.text.replace(/_____/g,'<span style="color:var(--rust);font-weight:700">_____</span>')}</div>
+      <div class="options">${q.options.map((o,oi)=>`<button class="opt-btn" id="opt-${qi}-${oi}" onclick="selMCQ(${qi},${oi},'${escQ(o)}','${escQ(q.answer)}')">${o}</button>`).join('')}</div>
+      <div class="feedback-msg" id="fb-${qi}"></div>
+    </div>`).join('');
+}
+function selMCQ(qi,oi,chosen,answer){
+  if(document.getElementById(`opt-${qi}-0`).disabled) return;
+  document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach(b=>b.disabled=true);
+  const correct=chosen===answer;
+  document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach(b=>{if(b.textContent===answer) b.classList.add('correct-ans');});
+  if(!correct) document.getElementById(`opt-${qi}-${oi}`).classList.add('wrong-ans');
+  if(!currentExamMode){
+    if(correct) score++;
+    answered++;
+    const fb=document.getElementById(`fb-${qi}`);
+    fb.textContent=correct?'✓ Correct!':'✗ The correct answer is: '+answer;
+    fb.className='feedback-msg show '+(correct?'correct':'wrong');
+    document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  }
+}
+
+// ─── ERROR ───
+function renderError(ex){
+  return ex.questions.map((q,qi)=>`
+    <div class="q-card" id="qcard-err-${qi}">
+      <div class="q-text">${qi+1}. ${q.text}</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px">
+        <span style="font-size:13px;color:#888">Correction:</span>
+        <input class="gap-input" id="err-${qi}" placeholder="type here…" onkeyup="if(event.key==='Enter')chkErr(${qi},'${escQ(q.answer)}')">
+        ${!currentExamMode?`<button class="check-btn" style="padding:7px 13px;font-size:13px" onclick="chkErr(${qi},'${escQ(q.answer)}')">Check</button>`:''}
+      </div>
+      <div class="feedback-msg" id="fb-err-${qi}"></div>
+    </div>`).join('');
+}
+function chkErr(qi,answer){
+  const inp=document.getElementById(`err-${qi}`);
+  if(!inp||inp.disabled) return;
+  const val=inp.value.trim().toLowerCase();
+  const correct=val===answer.toLowerCase()||answer.toLowerCase().includes(val);
+  inp.disabled=true;
+  inp.classList.add(correct?'correct':'wrong');
+  if(!currentExamMode){
+    if(correct) score++;
+    answered++;
+    const fb=document.getElementById(`fb-err-${qi}`);
+    fb.textContent=correct?'✓ Correct!':'✗ Answer: '+answer;
+    fb.className='feedback-msg show '+(correct?'correct':'wrong');
+    document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  }
+}
+
+// ─── MATCH ───
+function renderMatch(ex){
+  const L=[...ex.pairs].sort(()=>Math.random()-.5);
+  const R=L.map(p=>p[1]).sort(()=>Math.random()-.5);
+  return `<div class="match-wrap">
+    <div class="match-col">${L.map((p,i)=>`<div class="match-item" id="ml-${i}" onclick="selML(${i},'${escQ(p[0])}')">${p[0]}</div>`).join('')}</div>
+    <div class="match-col">${R.map((d,i)=>`<div class="match-item" id="mr-${i}" onclick="selMR(${i},'${escQ(d)}')">${d}</div>`).join('')}</div>
+  </div>`;
+}
+function selML(idx,word){
+  if(document.getElementById(`ml-${idx}`).classList.contains('matched')) return;
+  document.querySelectorAll('[id^="ml-"]').forEach(e=>{if(!e.classList.contains('matched')) e.classList.remove('selected');});
+  document.getElementById(`ml-${idx}`).classList.add('selected');
+  matchLeftWord=word; matchLeftIdx=idx;
+}
+function selMR(idx,def){
+  if(!matchLeftWord) return;
+  const el=document.getElementById(`mr-${idx}`);
+  if(el.classList.contains('matched')) return;
+  const ex=currentTopic.exercises[currentExIdx];
+  const corr=ex.pairs.find(p=>p[0]===matchLeftWord)?.[1];
+  const correct=def===corr;
+  if(correct){
+    document.getElementById(`ml-${matchLeftIdx}`).classList.remove('selected');
+    document.getElementById(`ml-${matchLeftIdx}`).classList.add('matched');
+    el.classList.add('matched');
+    if(!currentExamMode){score++;answered++;document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;}
+  } else {
+    el.classList.add('wrong-match');
+    setTimeout(()=>el.classList.remove('wrong-match'),600);
+    if(!currentExamMode){answered++;document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;}
+  }
+  matchLeftWord=null; matchLeftIdx=null;
+  document.querySelectorAll('[id^="ml-"]').forEach(e=>{if(!e.classList.contains('matched')) e.classList.remove('selected');});
+}
+
+// ─── GAP FILL ───
+function renderGapFill(ex){
+  let html=`<div class="word-bank">`;
+  ex.wordBank.forEach((w,i)=>{html+=`<div class="word-chip" id="wc-${i}" onclick="selWord('${escQ(w)}',${i})">${w}</div>`;});
+  html+=`</div>`;
+  ex.questions.forEach((q,qi)=>{
+    const parts=q.text.split('_____');
+    html+=`<div class="q-card" id="qcard-gap-${qi}">
+      <div class="q-text">${qi+1}. ${parts[0]}<span class="gap-span" id="gap-${qi}" onclick="placeWord(${qi},'${escQ(q.answer)}')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>${parts[1]||''}</div>
+      <div class="feedback-msg" id="fb-gap-${qi}"></div>
+    </div>`;
+  });
+  return html;
+}
+function selWord(word,idx){
+  document.querySelectorAll('.word-chip').forEach(c=>c.classList.remove('sel'));
+  selectedWord={word,idx};
+  document.getElementById(`wc-${idx}`).classList.add('sel');
+}
+function placeWord(qi,answer){
+  if(!selectedWord) return;
+  const gap=document.getElementById(`gap-${qi}`);
+  if(gap.dataset.locked) return;
+  gap.textContent=selectedWord.word;
+  const correct=selectedWord.word.toLowerCase()===answer.toLowerCase();
+  gap.className='gap-span lk '+(correct?'fc':'fw');
+  gap.dataset.locked='1';
+  const chip=document.getElementById(`wc-${selectedWord.idx}`);
+  if(chip) chip.classList.add('used');
+  if(!currentExamMode){
+    if(correct) score++;
+    answered++;
+    const fb=document.getElementById(`fb-gap-${qi}`);
+    fb.textContent=correct?'✓ Correct!':'✗ Answer: '+answer;
+    fb.className='feedback-msg show '+(correct?'correct':'wrong');
+    document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  }
+  selectedWord=null;
+  document.querySelectorAll('.word-chip').forEach(c=>c.classList.remove('sel'));
+}
+
+// ─── ODD ONE OUT ───
+function renderOddOut(ex){
+  return ex.questions.map((q,qi)=>`
+    <div class="q-card" id="qcard-odd-${qi}">
+      <div class="q-text">${qi+1}. Related to: <strong style="color:var(--rust)">${q.context}</strong> — which word does NOT belong?</div>
+      <div class="options">${q.words.map(w=>`<button class="opt-btn" id="odd-${qi}-${escId(w)}" onclick="selOdd(${qi},'${escQ(w)}','${escQ(q.odd)}')">${w}</button>`).join('')}</div>
+      <div class="feedback-msg" id="fb-odd-${qi}"></div>
+    </div>`).join('');
+}
+function selOdd(qi,chosen,odd){
+  document.querySelectorAll(`[id^="odd-${qi}-"]`).forEach(b=>b.disabled=true);
+  const correct=chosen===odd;
+  document.querySelectorAll(`[id^="odd-${qi}-"]`).forEach(b=>{if(b.textContent===odd) b.classList.add('correct-ans');});
+  if(!correct) document.getElementById(`odd-${qi}-${escId(chosen)}`).classList.add('wrong-ans');
+  if(!currentExamMode){
+    if(correct) score++;
+    answered++;
+    const fb=document.getElementById(`fb-odd-${qi}`);
+    fb.textContent=correct?'✓ Correct! That word does not belong.':'✗ The odd one out is: '+odd;
+    fb.className='feedback-msg show '+(correct?'correct':'wrong');
+    document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  }
+}
+
+// ─── PERSONAL ───
+function renderPersonal(ex){
+  return ex.questions.map((q,qi)=>`
+    <div class="q-card">
+      <div class="q-text">${qi+1}. ${q.text}</div>
+      <textarea class="answer-area" placeholder="Write your answer here in full sentences…"></textarea>
+    </div>`).join('');
+}
+
+// ─── PRON STRESS ───
+function renderPronStress(ex){
+  let html='';
+  ex.words.forEach((w,i)=>{
+    if(i===0){
+      html+=`<div class="q-card" style="border-color:var(--gold);background:#fffbf0">
+        <div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">✦ Example — already done</div>
+        <div style="font-family:'Playfair Display',serif;font-size:26px;letter-spacing:3px">${w.syllables.map((s,si)=>`<span style="${si===w.stressed?'color:var(--rust);text-decoration:underline;font-weight:700':''}">${s}</span>`).join(' · ')}</div>
+        <div style="margin-top:10px;font-size:14px;color:var(--blue)">${w.note}</div>
+      </div>`;
+    } else {
+      html+=`<div class="q-card" id="pcard-${i}">
+        <div style="font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px">${w.word}</div>
+        <div style="font-size:13px;color:#888;margin-bottom:12px">Click the stressed syllable:</div>
+        <div>${w.syllables.map((s,si)=>`<button class="pron-btn" id="pb-${i}-${si}" onclick="chkStress(${i},${si},${w.stressed},'${escQ(w.note)}')">${s.toUpperCase()}</button>`).join('')}</div>
+        <div class="feedback-msg" id="fb-pron-${i}"></div>
+      </div>`;
+    }
+  });
+  return html;
+}
+function chkStress(wi,chosen,correct_idx,note){
+  const btns=document.querySelectorAll(`[id^="pb-${wi}-"]`);
+  btns.forEach(b=>b.disabled=true);
+  const correct=chosen===correct_idx;
+  btns[correct_idx].classList.add('correct-ans');
+  if(!correct) btns[chosen].classList.add('wrong-ans');
+  if(!currentExamMode){
+    if(correct) score++;
+    answered++;
+    const fb=document.getElementById(`fb-pron-${wi}`);
+    fb.innerHTML=(correct?'✓ Correct! ':'✗ Not quite. ')+note;
+    fb.className='feedback-msg show '+(correct?'correct':'wrong');
+    document.getElementById('scoreBadge').textContent=`${score} / ${totalQ}`;
+  }
+}
+
+// ─── CHECK ALL ───
+function checkAll(){
+  const ex=currentTopic.exercises[currentExIdx];
+  if(ex.type==='error'){
+    ex.questions.forEach((q,qi)=>{
+      const inp=document.getElementById(`err-${qi}`);
+      if(inp&&!inp.disabled) chkErr(qi,q.answer);
+    });
+  }
+}
+
+// ─── NAV ───
+function nextEx(){
+  const total=currentTopic.exercises.length;
+  if(currentExIdx<total-1){currentExIdx++;renderExercise();}
+  else endExercise();
+}
+function prevEx(){if(currentExIdx>0){currentExIdx--;renderExercise();}}
+
+// ─── END ───
+function endExercise(){
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  const pct=totalQ>0?Math.round((score/totalQ)*100):0;
+  document.getElementById('resultsScore').textContent=pct+'%';
+  let emoji,title,sub;
+  if(pct>=90){emoji='🏆';title='Outstanding!';sub=`You scored ${score} out of ${totalQ}. Excellent work!`;confetti();}
+  else if(pct>=70){emoji='🌟';title='Well Done!';sub=`You scored ${score} out of ${totalQ}. Good job — review the ones you missed.`;}
+  else if(pct>=50){emoji='📚';title='Keep Going!';sub=`You scored ${score} out of ${totalQ}. You are getting there — practise a little more.`;}
+  else{emoji='💪';title='Keep Practising!';sub=`You scored ${score} out of ${totalQ}. Don\'t give up — review the topic and try again!`;}
+  document.getElementById('resultsEmoji').textContent=emoji;
+  document.getElementById('resultsTitle').textContent=title;
+  document.getElementById('resultsSub').textContent=sub;
+  showScreen('results-screen');
+}
+function retryExercise(){startTopic(currentTopic.id);}
+
+// ─── CONFETTI ───
+function confetti(){
+  const colors=['#d4a843','#c5502a','#6b8f71','#1a1410','#4a7fa5'];
+  for(let i=0;i<80;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.5}s`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
+}
+
+function escQ(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function escId(s){return String(s).replace(/[^a-zA-Z0-9]/g,'_');}
+
+function toggleGroup(id){
+  const body=document.getElementById(id);
+  const arrow=document.getElementById('arr-'+id);
+  if(!body) return;
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  if(arrow) arrow.classList.toggle('open',!isOpen);
+}
+</script>
+</body>
+</html>
