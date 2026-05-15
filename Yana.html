@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aiganym — English</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--ink:#1c1917;--surface:#ffffff;--surface2:#f0ece5;--border:#e2ddd6;--muted:#9c9187;--accent:#c5502a;--accent2:#3a6899;--accent3:#4a7a5a;--gold:#b8892a;--shadow:rgba(28,25,23,0.06);--shadow2:rgba(28,25,23,0.14);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+.hdr{background:var(--ink);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-logo{font-family:'Lora',serif;font-size:18px;color:#f7f4ef;letter-spacing:.02em;}
+.hdr-logo em{font-style:italic;color:#d4a843;}
+.hdr-date{font-family:'Geist Mono',monospace;font-size:11px;color:rgba(247,244,239,.35);}
+.hero{padding:52px 40px 28px;max-width:860px;margin:0 auto;}
+.hero-eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.hero-title{font-family:'Lora',serif;font-size:44px;line-height:1.12;margin-bottom:10px;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.65;max-width:480px;}
+.nav{max-width:860px;margin:0 auto;padding:20px 40px 28px;display:flex;gap:8px;flex-wrap:wrap;}
+.nav-pill{padding:8px 18px;border-radius:40px;font-size:13px;font-weight:500;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;}
+.nav-pill:hover{border-color:var(--ink);color:var(--ink);}
+.nav-pill.active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.pill-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dot-hw{background:var(--gold);}.dot-rev{background:var(--accent2);}.dot-wl{background:var(--accent3);}
+.main{max-width:860px;margin:0 auto;padding:0 40px 100px;}
+.section{display:none;animation:fadeIn .22s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;padding-bottom:14px;border-bottom:1.5px solid var(--border);}
+.sec-title{font-family:'Lora',serif;font-size:27px;}
+.sec-title em{font-style:italic;}
+.sec-meta{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted);}
+.empty-state{text-align:center;padding:64px 20px;color:var(--muted);}
+.empty-icon{font-size:38px;margin-bottom:14px;}
+.empty-msg{font-family:'Lora',serif;font-size:19px;margin-bottom:6px;color:var(--ink);}
+.empty-sub{font-size:13px;}
+/* HW */
+.hw-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.hw-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;transition:all .2s;}
+.hw-card:hover{box-shadow:0 4px 20px var(--shadow2);}
+.hw-card.done{opacity:.55;}
+.hw-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;background:transparent;}
+.hw-check.checked{background:var(--accent3);border-color:var(--accent3);}
+.hw-check.checked::after{content:'✓';color:white;font-size:11px;font-weight:700;}
+.hw-check:hover:not(.checked){border-color:var(--accent3);}
+.hw-body{flex:1;min-width:0;}
+.hw-title-text{font-size:15px;font-weight:500;margin-bottom:4px;line-height:1.4;}
+.hw-meta-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.hw-date{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted);}
+.hw-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.5px;}
+.hw-pend{background:rgba(184,137,42,.12);color:var(--gold);border:1px solid rgba(184,137,42,.25);}
+.hw-done-b{background:rgba(74,122,90,.12);color:var(--accent3);border:1px solid rgba(74,122,90,.25);}
+.hw-expand-btn{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;margin-top:6px;transition:color .2s;display:block;}
+.hw-expand-btn:hover{color:var(--ink);}
+.hw-content{margin-top:12px;padding:13px 15px;background:var(--surface2);border-radius:9px;font-size:13px;line-height:1.8;white-space:pre-wrap;color:var(--ink);display:none;border:1px solid var(--border);}
+.hw-card.expanded .hw-content{display:block;}
+.hw-arrow{margin-left:auto;flex-shrink:0;color:var(--muted);font-size:12px;transition:transform .2s;align-self:center;cursor:pointer;}
+.hw-card.expanded .hw-arrow{transform:rotate(90deg);}
+/* REVISION */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
+.rev-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;}
+.rev-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.rev-card.type-vocab::before{background:var(--accent);}
+.rev-card.type-grammar::before{background:var(--accent2);}
+.rev-card.type-pronunciation::before{background:var(--accent3);}
+.rev-card.type-idiom::before{background:var(--gold);}
+.rev-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px var(--shadow2);}
+.rev-type{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:7px;}
+.rev-card.type-vocab .rev-type{color:var(--accent);}
+.rev-card.type-grammar .rev-type{color:var(--accent2);}
+.rev-card.type-pronunciation .rev-type{color:var(--accent3);}
+.rev-card.type-idiom .rev-type{color:var(--gold);}
+.rev-title{font-family:'Lora',serif;font-size:17px;margin-bottom:6px;line-height:1.3;}
+.rev-preview{font-size:12px;color:var(--muted);line-height:1.55;}
+.rev-overlay{position:fixed;inset:0;z-index:300;background:rgba(28,25,23,.52);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.rev-overlay.open{opacity:1;pointer-events:all;}
+.rev-modal{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;width:100%;max-width:620px;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(14px) scale(.98);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 24px 60px rgba(28,25,23,.2);}
+.rev-overlay.open .rev-modal{transform:translateY(0) scale(1);}
+.rev-modal-head{padding:20px 24px;border-bottom:1.5px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
+.rev-modal-type{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.rev-modal-title{font-family:'Lora',serif;font-size:22px;}
+.rev-modal-close{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:6px 13px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--ink);transition:all .2s;}
+.rev-modal-close:hover{border-color:var(--ink);}
+.rev-modal-body{padding:20px 24px;overflow-y:auto;flex:1;font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--ink);}
+/* WL */
+.wl-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.wl-item{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .2s;}
+.wl-item:hover{box-shadow:0 4px 16px var(--shadow);}
+.wl-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;flex-wrap:wrap;}
+.wl-date-badge{font-family:'Geist Mono',monospace;font-size:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:3px 8px;border-radius:6px;flex-shrink:0;white-space:nowrap;}
+.wl-lesson-title{font-size:15px;font-weight:500;flex:1;min-width:120px;}
+.wl-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.wl-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:.4px;}
+.tag-vocab{background:rgba(197,80,42,.1);color:var(--accent);border:1px solid rgba(197,80,42,.2);}
+.tag-grammar{background:rgba(58,104,153,.1);color:var(--accent2);border:1px solid rgba(58,104,153,.2);}
+.tag-pron{background:rgba(74,122,90,.1);color:var(--accent3);border:1px solid rgba(74,122,90,.2);}
+.tag-idiom{background:rgba(184,137,42,.1);color:var(--gold);border:1px solid rgba(184,137,42,.2);}
+.wl-chevron{color:var(--muted);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.wl-item.open .wl-chevron{transform:rotate(90deg);}
+.wl-body{display:none;padding:0 20px 18px;border-top:1px solid var(--border);}
+.wl-item.open .wl-body{display:block;}
+.wl-body-inner{padding-top:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;color:var(--ink);}
+/* ADMIN */
+.admin-bar{background:var(--ink);color:rgba(247,244,239,.5);font-size:12px;font-family:'Geist Mono',monospace;padding:8px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.admin-toggle{background:rgba(197,80,42,.4);border:1px solid var(--accent);border-radius:6px;padding:4px 12px;font-size:11px;color:#f7f4ef;cursor:pointer;font-family:'Geist Mono',monospace;transition:all .2s;}
+.admin-toggle:hover{background:rgba(197,80,42,.6);}
+/* FORMS */
+.add-form{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;display:none;animation:fadeIn .2s;}
+.add-form.visible{display:block;}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-start;}
+.f-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
+.f-group{flex:1;min-width:140px;}
+.f-input,.f-select,.f-textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:border-color .2s;}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--ink);}
+.f-textarea{min-height:100px;resize:vertical;}
+.btn-add{background:var(--accent);color:white;border:none;border-radius:8px;padding:9px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s;}
+.btn-add:hover{background:#a8401f;}
+.btn-secondary{background:var(--surface2);color:var(--ink);border:1.5px solid var(--border);border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--ink);}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+.del-btn{background:none;border:none;color:var(--border);cursor:pointer;font-size:13px;padding:4px;transition:color .2s;line-height:1;flex-shrink:0;}
+.del-btn:hover{color:var(--accent);}
+.add-trigger{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;padding:6px 0;border:none;background:none;font-family:'DM Sans',sans-serif;transition:color .2s;}
+.add-trigger:hover{color:var(--ink);}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:#f7f4ef;font-size:13px;padding:10px 18px;border-radius:10px;opacity:0;transform:translateY(8px);transition:all .25s;z-index:999;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
+@media(max-width:600px){.hdr,.admin-bar,.hero,.nav,.main{padding-left:18px;padding-right:18px;}.hero-title{font-size:32px;}.rev-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="admin-bar" id="admin-bar" style="display:none">
+  <span>TEACHER MODE — changes save locally in browser</span>
+  <button class="admin-toggle" onclick="exitTeacher()">✕ Exit teacher mode</button>
+</div>
+
+<header class="hdr">
+  <div class="hdr-logo">English with <em>Aiganym</em></div>
+  <div class="hdr-date" id="hdr-date"></div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">B1 — Intermediate</div>
+  <div class="hero-title">Your <em>learning</em><br>space</div>
+  <div class="hero-sub">Homework, revision materials, and notes from every lesson — all in one place.</div>
+</div>
+
+<nav class="nav">
+  <button class="nav-pill active" onclick="showSection('hw',this)"><span class="pill-dot dot-hw"></span> Homework</button>
+  <button class="nav-pill" onclick="showSection('rev',this)"><span class="pill-dot dot-rev"></span> Revision</button>
+  <button class="nav-pill" onclick="showSection('wl',this)"><span class="pill-dot dot-wl"></span> What We Learnt</button>
+</nav>
+
+<div class="main">
+
+  <div class="section active" id="sec-hw">
+    <div class="sec-head">
+      <div class="sec-title"><em>Homework</em></div>
+      <div class="sec-meta" id="hw-meta"></div>
+    </div>
+    <div class="add-form teacher-only" id="hw-add-form">
+      <div class="form-row">
+        <div class="f-group" style="flex:2"><label class="f-label">Title</label><input class="f-input" id="hw-new-title" placeholder="e.g. Page 42, Exercises 1-3"></div>
+      </div>
+      <div class="form-row">
+        <div class="f-group"><label class="f-label">Content / Instructions</label><textarea class="f-textarea" id="hw-new-content" placeholder="Paste the full homework sheet, instructions, or wordlist here..."></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="hideForm('hw-add-form','hw-add-trigger')">Cancel</button>
+        <button class="btn-add" onclick="addHomework()">Add homework</button>
+      </div>
+    </div>
+    <div class="hw-list" id="hw-list"></div>
+    <button class="add-trigger teacher-only" id="hw-add-trigger" onclick="showForm('hw-add-form','hw-add-trigger')">+ Add homework</button>
+  </div>
+
+  <div class="section" id="sec-rev">
+    <div class="sec-head">
+      <div class="sec-title">Revision <em>materials</em></div>
+      <div class="sec-meta" id="rev-meta"></div>
+    </div>
+    <div class="add-form teacher-only" id="rev-add-form">
+      <div class="form-row">
+        <div class="f-group" style="flex:2"><label class="f-label">Title</label><input class="f-input" id="rev-new-title" placeholder="e.g. Phrasal verbs - Unit 3"></div>
+        <div class="f-group" style="flex:1;min-width:130px"><label class="f-label">Type</label>
+          <select class="f-select" id="rev-new-type">
+            <option value="vocab">Vocabulary</option>
+            <option value="grammar">Grammar</option>
+            <option value="pronunciation">Pronunciation</option>
+            <option value="idiom">Idioms</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="f-group"><label class="f-label">Content</label><textarea class="f-textarea" id="rev-new-content" placeholder="Paste notes, word lists, explanations, examples..." style="min-height:120px"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="hideForm('rev-add-form','rev-add-trigger')">Cancel</button>
+        <button class="btn-add" onclick="addRevision()">Add material</button>
+      </div>
+    </div>
+    <div class="rev-grid" id="rev-grid"></div>
+    <button class="add-trigger teacher-only" id="rev-add-trigger" onclick="showForm('rev-add-form','rev-add-trigger')">+ Add revision material</button>
+  </div>
+
+  <div class="section" id="sec-wl">
+    <div class="sec-head">
+      <div class="sec-title">What we <em>learnt</em></div>
+      <div class="sec-meta" id="wl-meta"></div>
+    </div>
+    <div class="add-form teacher-only" id="wl-add-form">
+      <div class="form-row">
+        <div class="f-group" style="flex:2"><label class="f-label">Lesson title</label><input class="f-input" id="wl-new-title" placeholder="e.g. Personality adjectives and used to"></div>
+        <div class="f-group" style="flex:1;min-width:130px"><label class="f-label">Date</label><input class="f-input" id="wl-new-date" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="f-group" style="min-width:100%">
+          <label class="f-label">Tags</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="tag-vocab"> <span class="wl-tag tag-vocab">Vocab</span></label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="tag-grammar"> <span class="wl-tag tag-grammar">Grammar</span></label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="tag-pron"> <span class="wl-tag tag-pron">Pronunciation</span></label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="tag-idiom"> <span class="wl-tag tag-idiom">Idioms</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="f-group"><label class="f-label">Notes / Summary</label><textarea class="f-textarea" id="wl-new-content" placeholder="What did we cover? Key words, structures, examples..." style="min-height:110px"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="hideForm('wl-add-form','wl-add-trigger')">Cancel</button>
+        <button class="btn-add" onclick="addLesson()">Add lesson</button>
+      </div>
+    </div>
+    <div class="wl-list" id="wl-list"></div>
+    <button class="add-trigger teacher-only" id="wl-add-trigger" onclick="showForm('wl-add-form','wl-add-trigger')">+ Add lesson</button>
+  </div>
+
+</div>
+
+<div class="rev-overlay" id="rev-overlay" onclick="if(event.target===this)closeRevModal()">
+  <div class="rev-modal">
+    <div class="rev-modal-head">
+      <div><div class="rev-modal-type" id="rmo-type"></div><div class="rev-modal-title" id="rmo-title"></div></div>
+      <button class="rev-modal-close" onclick="closeRevModal()">Close</button>
+    </div>
+    <div class="rev-modal-body" id="rmo-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}};
+const sv=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let hwData=ld('sp_hw',[]),revData=ld('sp_rev',[]),wlData=ld('sp_wl',[]);
+let teacherMode=new URLSearchParams(location.search).has('teacher');
+
+document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('wl-new-date').value=new Date().toISOString().split('T')[0];
+applyTeacherMode();renderHW();renderRev();renderWL();
+
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');btn.classList.add('active');
+}
+function exitTeacher(){
+  teacherMode=false;const url=new URL(location.href);url.searchParams.delete('teacher');history.replaceState({},'',url);
+  applyTeacherMode();document.getElementById('admin-bar').style.display='none';
+}
+function applyTeacherMode(){
+  document.querySelectorAll('.teacher-only').forEach(el=>el.style.display=teacherMode?'':'none');
+  if(teacherMode)document.getElementById('admin-bar').style.display='flex';
+}
+function showForm(fid,tid){document.getElementById(fid).classList.add('visible');document.getElementById(tid).style.display='none';}
+function hideForm(fid,tid){document.getElementById(fid).classList.remove('visible');document.getElementById(tid).style.display='';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function fmtDate(ts){return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderHW(){
+  const list=document.getElementById('hw-list');
+  const pending=hwData.filter(h=>!h.done).length;
+  document.getElementById('hw-meta').textContent=hwData.length?pending+' pending · '+(hwData.length-pending)+' done':'';
+  if(!hwData.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-msg">No homework yet</div><div class="empty-sub">Your teacher will add assignments here.</div></div>';return;}
+  const sorted=[...hwData].sort((a,b)=>a.done!==b.done?(a.done?1:-1):b.date-a.date);
+  list.innerHTML=sorted.map(h=>{
+    const hc=h.content&&h.content.trim();
+    return '<div class="hw-card'+(h.done?' done':'')+'" id="hwc-'+h.id+'">'+
+      '<div class="hw-check'+(h.done?' checked':'')+'" onclick="markDone(\''+h.id+'\')" title="'+(h.done?'Mark undone':'Mark as done')+'"></div>'+
+      '<div class="hw-body">'+
+        '<div class="hw-title-text">'+esc(h.title)+'</div>'+
+        '<div class="hw-meta-row"><span class="hw-date">'+fmtDate(h.date)+'</span>'+
+        '<span class="hw-badge '+(h.done?'hw-done-b':'hw-pend')+'">'+(h.done?'Done':'Pending')+'</span>'+
+        (teacherMode?'<button class="del-btn" onclick="delHW(\''+h.id+'\')" title="Delete">✕</button>':'')+
+        '</div>'+
+        (hc?'<button class="hw-expand-btn" onclick="toggleExpand(\''+h.id+'\')">View details ▸</button><div class="hw-content">'+esc(h.content)+'</div>':'')+
+      '</div>'+
+      (hc?'<span class="hw-arrow" onclick="toggleExpand(\''+h.id+'\')">▸</span>':'')+
+    '</div>';
+  }).join('');
+}
+function toggleExpand(id){document.getElementById('hwc-'+id)?.classList.toggle('expanded');}
+function markDone(id){const h=hwData.find(h=>h.id===id);if(!h)return;h.done=!h.done;sv('sp_hw',hwData);renderHW();toast(h.done?'Marked as done!':'Moved back to pending');}
+function addHomework(){
+  const title=document.getElementById('hw-new-title').value.trim();
+  if(!title){toast('Please enter a title.');return;}
+  const content=document.getElementById('hw-new-content').value.trim();
+  hwData.unshift({id:'hw'+Date.now(),title,content,date:Date.now(),done:false});sv('sp_hw',hwData);
+  document.getElementById('hw-new-title').value='';document.getElementById('hw-new-content').value='';
+  hideForm('hw-add-form','hw-add-trigger');renderHW();toast('Homework added');
+}
+function delHW(id){if(!confirm('Remove this homework?'))return;hwData=hwData.filter(h=>h.id!==id);sv('sp_hw',hwData);renderHW();toast('Removed');}
+
+const TYPE_LABELS={vocab:'Vocabulary',grammar:'Grammar',pronunciation:'Pronunciation',idiom:'Idioms'};
+function renderRev(){
+  const grid=document.getElementById('rev-grid');
+  document.getElementById('rev-meta').textContent=revData.length?revData.length+' item'+(revData.length!==1?'s':''):'';
+  if(!revData.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📖</div><div class="empty-msg">No materials yet</div><div class="empty-sub">Revision notes will appear here after each lesson.</div></div>';return;}
+  grid.innerHTML=revData.map(r=>
+    '<div class="rev-card type-'+r.type+'" onclick="openRevModal(\''+r.id+'\')">'+
+    '<div class="rev-type">'+(TYPE_LABELS[r.type]||r.type)+'</div>'+
+    '<div class="rev-title">'+esc(r.title)+'</div>'+
+    '<div class="rev-preview">'+esc(r.content).substring(0,90).replace(/\n/g,' ')+(r.content.length>90?'...':'')+'</div>'+
+    (teacherMode?'<button class="del-btn" style="position:absolute;top:10px;right:10px" onclick="event.stopPropagation();delRev(\''+r.id+'\')" title="Delete">✕</button>':'')+
+    '</div>'
+  ).join('');
+}
+function openRevModal(id){
+  const r=revData.find(r=>r.id===id);if(!r)return;
+  const tc=r.type==='vocab'?'var(--accent)':r.type==='grammar'?'var(--accent2)':r.type==='pronunciation'?'var(--accent3)':'var(--gold)';
+  document.getElementById('rmo-type').textContent=TYPE_LABELS[r.type]||r.type;
+  document.getElementById('rmo-type').style.color=tc;
+  document.getElementById('rmo-title').textContent=r.title;
+  document.getElementById('rmo-body').textContent=r.content;
+  document.getElementById('rev-overlay').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeRevModal(){document.getElementById('rev-overlay').classList.remove('open');document.body.style.overflow='';}
+function addRevision(){
+  const title=document.getElementById('rev-new-title').value.trim();
+  const content=document.getElementById('rev-new-content').value.trim();
+  const type=document.getElementById('rev-new-type').value;
+  if(!title||!content){toast('Please fill in title and content.');return;}
+  revData.unshift({id:'rv'+Date.now(),title,content,type,date:Date.now()});sv('sp_rev',revData);
+  document.getElementById('rev-new-title').value='';document.getElementById('rev-new-content').value='';
+  hideForm('rev-add-form','rev-add-trigger');renderRev();toast('Revision material added');
+}
+function delRev(id){if(!confirm('Remove this?'))return;revData=revData.filter(r=>r.id!==id);sv('sp_rev',revData);renderRev();toast('Removed');}
+
+function renderWL(){
+  const list=document.getElementById('wl-list');
+  document.getElementById('wl-meta').textContent=wlData.length?wlData.length+' lesson'+(wlData.length!==1?'s':''):'';
+  if(!wlData.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">✏️</div><div class="empty-msg">No lessons recorded yet</div><div class="empty-sub">A summary of each lesson will appear here.</div></div>';return;}
+  const sorted=[...wlData].sort((a,b)=>b.date-a.date);
+  list.innerHTML=sorted.map(l=>{
+    const tagHtml=(l.tags||[]).map(t=>{
+      const cls=t==='vocab'?'tag-vocab':t==='grammar'?'tag-grammar':t==='pron'?'tag-pron':'tag-idiom';
+      const label=t==='vocab'?'Vocab':t==='grammar'?'Grammar':t==='pron'?'Pronunciation':'Idioms';
+      return '<span class="wl-tag '+cls+'">'+label+'</span>';
+    }).join('');
+    return '<div class="wl-item" id="wli-'+l.id+'">'+
+      '<div class="wl-header" onclick="toggleWL(\''+l.id+'\')">'+
+      '<span class="wl-date-badge">'+(l.lessonDate||fmtDate(l.date))+'</span>'+
+      '<span class="wl-lesson-title">'+esc(l.title)+'</span>'+
+      '<div class="wl-tags">'+tagHtml+'</div>'+
+      (teacherMode?'<button class="del-btn" onclick="event.stopPropagation();delWL(\''+l.id+'\')" title="Delete">✕</button>':'')+
+      '<span class="wl-chevron">▸</span></div>'+
+      '<div class="wl-body"><div class="wl-body-inner">'+esc(l.content)+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+function toggleWL(id){document.getElementById('wli-'+id)?.classList.toggle('open');}
+function addLesson(){
+  const title=document.getElementById('wl-new-title').value.trim();
+  const content=document.getElementById('wl-new-content').value.trim();
+  const dateVal=document.getElementById('wl-new-date').value;
+  if(!title||!content){toast('Please fill in title and content.');return;}
+  const tags=[];
+  ['vocab','grammar','pron','idiom'].forEach(t=>{if(document.getElementById('tag-'+t).checked)tags.push(t);});
+  const lessonDate=dateVal?new Date(dateVal).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+  wlData.unshift({id:'wl'+Date.now(),title,content,tags,lessonDate,date:Date.now()});sv('sp_wl',wlData);
+  document.getElementById('wl-new-title').value='';document.getElementById('wl-new-content').value='';
+  ['vocab','grammar','pron','idiom'].forEach(t=>{document.getElementById('tag-'+t).checked=false;});
+  document.getElementById('wl-new-date').value=new Date().toISOString().split('T')[0];
+  hideForm('wl-add-form','wl-add-trigger');renderWL();toast('Lesson added');
+}
+function delWL(id){if(!confirm('Remove this lesson?'))return;wlData=wlData.filter(l=>l.id!==id);sv('sp_wl',wlData);renderWL();toast('Removed');}
+</script>
+</body>
+</html>
